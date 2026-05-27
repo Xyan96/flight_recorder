@@ -1,0 +1,7 @@
+.DS_Store
+__pycache__/
+*.pyc
+*.log
+deployment/*.log
+deployment/__pycache__/
+飞行联络与巡航检查记录_RESTORED.zip

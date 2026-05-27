@@ -1,0 +1,116 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="飞行记录">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#f7f3e8">
+    <title>飞行联络与巡航检查记录</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+    <link rel="stylesheet" href="styles.css?v=41">
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="top-bar">
+        <label>机号<span class="prefix-field"><span>B-</span><input id="aircraftNo" autocomplete="off" inputmode="numeric" maxlength="4"></span></label>
+        <label>航班号<span class="prefix-field"><span>CA</span><input id="flightNo" autocomplete="off" inputmode="numeric" maxlength="4"></span></label>
+        <label>航段<span class="sector-field"><input id="sectorFrom" autocomplete="off" maxlength="4" placeholder="PEK"><span>-</span><input id="sectorTo" autocomplete="off" maxlength="4" placeholder="CTU"></span></label>
+        <label class="captain-field">带队机长<span class="captain-wrap"><input id="captain" autocomplete="off" placeholder="姓名"><span class="fn-field"><span>FN:</span><input id="captainFn" autocomplete="off" inputmode="text" placeholder="档案号"></span></span></label>
+        <label>日期<span class="date-wrap"><input id="dateUtc" type="date"><button id="themeToggle" type="button" aria-label="切换黑暗模式">☾</button></span></label>
+      </header>
+
+      <nav class="page-bar" aria-label="记录翻页">
+        <button id="prevPage" type="button" disabled="">上一页</button>
+        <output id="pageIndicator">第 1 页 / 共 1 页</output>
+        <button id="nextPage" type="button">下一页</button>
+        <button id="saveRecord" type="button">保存</button>
+        <button id="clearAll" type="button" disabled>清除全部</button>
+        <button id="openArchive" type="button">记录夹</button>
+      </nav>
+
+      <section id="archivePanel" class="archive-panel" hidden="">
+        <div class="archive-dialog">
+          <header>
+            <h2>记录夹</h2>
+            <div class="archive-actions">
+              <button id="closeArchive" type="button">关闭</button>
+            </div>
+          </header>
+          <div class="archive-tools">
+            <button id="exportLocalRecords" type="button">导出本机</button>
+            <label class="import-local-records">导入本机<input id="importLocalRecords" type="file" accept="application/json,.json"></label>
+          </div>
+          <div class="archive-search">
+            <label class="archive-field">日期<input id="archiveDate" type="date"></label>
+            <label class="archive-field">航班号 CA<input id="archiveFlightNo" autocomplete="off" inputmode="numeric" maxlength="4"></label>
+            <button id="searchArchive" type="button">搜索</button>
+          </div>
+          <div id="archiveResults" class="archive-results"></div>
+        </div>
+      </section>
+
+      <section class="sheet">
+        <div class="comms-panel">
+          <div class="panel-title comms-title">
+            <span>时间 UTC</span>
+            <span>联络对象</span>
+            <span>联络记录</span>
+          </div>
+          <div id="commRows" class="rows"></div>
+          <div class="notes"><span>备注</span><textarea id="todo" rows="3"></textarea></div>
+        </div>
+
+        <aside class="checks-panel">
+          <div id="checkRows" class="check-list"></div>
+        </aside>
+      </section>
+
+      <footer class="preflight">
+        <label>飞行前检查</label>
+        <label>发动机滑油量<input id="preOil" inputmode="decimal"></label>
+        <label>机组氧气 PSI<input id="oxygen" inputmode="decimal"></label>
+        <label>放行油量 KG<input id="releaseFuel" inputmode="decimal"></label>
+        <label>实际机载油量 KG<input id="actualFuel" inputmode="decimal"></label>
+      </footer>
+    </main>
+
+    <template id="commTemplate">
+      <div class="comm-row">
+        <input class="utc-time" inputmode="numeric" placeholder="HHMMZ">
+        <label class="vhf-field">
+          <input class="vhf-rest" inputmode="decimal" maxlength="7" placeholder="118.000">
+          <output class="vhf-display"></output>
+        </label>
+        <div class="comm-record">
+          <textarea class="comm-note" rows="2" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" inputmode="text"></textarea>
+          <div class="phrase-bar" aria-label="常用通信模板"></div>
+        </div>
+      </div>
+    </template>
+
+    <template id="checkTemplate">
+      <article class="check-card">
+        <header>
+          <h2>巡航检查记录</h2>
+          <button class="clear-check" type="button">清空</button>
+        </header>
+        <div class="check-grid">
+          <label>检查时间 UTC<output class="check-time" data-save=""></output></label>
+          <label>发动机滑油量 L<input class="oil-l" inputmode="decimal"></label>
+          <label>发动机滑油量 R<input class="oil-r" inputmode="decimal"></label>
+          <label>已耗燃油 KG<input class="used-fuel fuel-input" inputmode="decimal"></label>
+          <label>机载油量 KG<input class="onboard-fuel fuel-input" inputmode="decimal"></label>
+          <label>已耗油量+机载油量 KG<output class="total-fuel">0</output></label>
+          <label>实际空中风<span class="wind-field"><input class="wind-dir" inputmode="numeric" maxlength="4"><span>/</span><input class="wind-speed" inputmode="numeric" maxlength="4"></span></label>
+          <label>起飞油量 KG<output class="takeoff-copy">0</output></label>
+          <label>油量差值 KG<output class="fuel-diff">0</output></label>
+        </div>
+      </article>
+    </template>
+
+    <script src="app.js?v=41"></script>
+  
+
+</body></html>

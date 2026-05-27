@@ -1,0 +1,13 @@
+tunnel: 2b606329-b63c-4e0f-8b8d-a4bffe226475
+credentials-file: /Users/xiazhiyuan/.cloudflared/2b606329-b63c-4e0f-8b8d-a4bffe226475.json
+protocol: http2
+
+ingress:
+  - hostname: drive.tuomakazusa.online
+    service: http://192.168.124.102:5000
+  - hostname: sync.tuomakazusa.online
+    path: /drive/*
+    service: http://192.168.124.102
+  - hostname: flight.tuomakazusa.online
+    service: http://127.0.0.1:8765
+  - service: http_status:404

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.flightlog.web</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/python3</string>
+    <string>/Users/xiazhiyuan/.flight-log-server/flight_log_server.py</string>
+    <string>--host</string>
+    <string>127.0.0.1</string>
+    <string>--port</string>
+    <string>8765</string>
+    <string>--root</string>
+    <string>/Users/xiazhiyuan/.flight-log-web</string>
+    <string>--data-file</string>
+    <string>/Users/xiazhiyuan/.flight-log-data/license-archive.json</string>
+    <string>--records-dir</string>
+    <string>/Users/xiazhiyuan/.flight-log-data/records</string>
+  </array>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>/Users/xiazhiyuan/Documents/Codex/2026-05-17/files-mentioned-by-the-user-backup/deployment/web.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/xiazhiyuan/Documents/Codex/2026-05-17/files-mentioned-by-the-user-backup/deployment/web.err.log</string>
+</dict>
+</plist>

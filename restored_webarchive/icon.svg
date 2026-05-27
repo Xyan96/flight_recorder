@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Flight recorder icon">
+  <defs>
+    <linearGradient id="sky" x1="96" x2="416" y1="48" y2="464" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#164e63"/>
+      <stop offset=".56" stop-color="#1f7a8c"/>
+      <stop offset="1" stop-color="#f2b84b"/>
+    </linearGradient>
+    <linearGradient id="paper" x1="154" x2="382" y1="134" y2="340" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fffdf6"/>
+      <stop offset="1" stop-color="#d9edf2"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#sky)"/>
+  <path d="M74 354c64-22 126-22 186 0s121 22 178-2" fill="none" stroke="#fff7dc" stroke-width="26" stroke-linecap="round" opacity=".78"/>
+  <path d="M84 398c64-19 126-19 186 0s115 19 158 0" fill="none" stroke="#0f3442" stroke-width="20" stroke-linecap="round" opacity=".34"/>
+  <path d="M114 230 404 106c16-7 31 11 21 26L302 344c-8 14-29 8-30-8l-7-77-78-9c-16-2-21-23-7-31l172-97-222 139c-20 13-38-22-16-31z" fill="url(#paper)"/>
+  <path d="M265 259 404 106 187 250z" fill="#a8d8e3" opacity=".82"/>
+  <path d="M272 336 265 259 224 282z" fill="#e6f6f8"/>
+  <path d="M152 154h76" stroke="#fff7dc" stroke-width="18" stroke-linecap="round" opacity=".9"/>
+  <path d="M120 186h56" stroke="#fff7dc" stroke-width="14" stroke-linecap="round" opacity=".68"/>
+  <circle cx="374" cy="374" r="44" fill="#0f3442" opacity=".88"/>
+  <path d="M350 374h48M374 350v48" stroke="#f2b84b" stroke-width="14" stroke-linecap="round"/>
+</svg>
