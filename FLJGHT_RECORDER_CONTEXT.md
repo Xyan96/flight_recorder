@@ -97,10 +97,10 @@ Current branch:
 - main
 
 Saved version commit:
-- `7948447 Save flight recorder v41`
+- `90bd3cf Restrict FN to digits and bump version to v53`
 
 Tag:
-- `v41`
+- `v53`
 
 GitHub:
 - GitHub user seen through connector: Xyan96
@@ -114,7 +114,9 @@ When ready to create and push to GitHub:
 cd /Users/xiazhiyuan/Documents/Codex/fljght_recorder
 gh auth login
 gh repo create Xyan96/fljght_recorder --private --source=. --remote=origin --push
-git push origin v41
+git tag v53
+git push origin main
+git push origin v53
 ```
 
 If the empty GitHub repo is created manually first:
@@ -123,8 +125,15 @@ If the empty GitHub repo is created manually first:
 cd /Users/xiazhiyuan/Documents/Codex/fljght_recorder
 git remote add origin https://github.com/Xyan96/fljght_recorder.git
 git push -u origin main
-git push origin v41
+git tag v53
+git push origin v53
 ```
+
+Release checklist:
+- Update `restored_webarchive/index.html` query strings, `restored_webarchive/sw.js` cache name/assets, `README.md`, and this context file to the same version.
+- Commit those version updates before pushing.
+- Push both `main` and the matching version tag, for example `git push origin main` and `git push origin v53`.
+- If replacing an existing tag, verify the intended tag state first; do not assume GitHub Tags/Releases update from branch pushes.
 
 ## Notes For Future Recovery
 
