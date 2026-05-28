@@ -9,7 +9,7 @@
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
     <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
-    <link rel="stylesheet" href="styles.css?v=41">
+    <link rel="stylesheet" href="styles.css?v=53">
   </head>
   <body>
     <main class="app-shell">
@@ -17,7 +17,7 @@
         <label>机号<span class="prefix-field"><span>B-</span><input id="aircraftNo" autocomplete="off" inputmode="numeric" maxlength="4"></span></label>
         <label>航班号<span class="prefix-field"><span>CA</span><input id="flightNo" autocomplete="off" inputmode="numeric" maxlength="4"></span></label>
         <label>航段<span class="sector-field"><input id="sectorFrom" autocomplete="off" maxlength="4" placeholder="PEK"><span>-</span><input id="sectorTo" autocomplete="off" maxlength="4" placeholder="CTU"></span></label>
-        <label class="captain-field">带队机长<span class="captain-wrap"><input id="captain" autocomplete="off" placeholder="姓名"><span class="fn-field"><span>FN:</span><input id="captainFn" autocomplete="off" inputmode="text" placeholder="档案号"></span></span></label>
+        <label class="captain-field">带队机长<span class="captain-wrap"><input id="captain" autocomplete="off" placeholder="姓名"><span class="fn-field"><span>FN:</span><input id="captainFn" autocomplete="off" inputmode="numeric" pattern="[0-9]*" maxlength="8" placeholder="档案号"></span></span></label>
         <label>日期<span class="date-wrap"><input id="dateUtc" type="date"><button id="themeToggle" type="button" aria-label="切换黑暗模式">☾</button></span></label>
       </header>
 
@@ -76,6 +76,8 @@
       </footer>
     </main>
 
+    <div id="quickPhraseDock" class="quick-phrase-dock" aria-label="常用通信模板" hidden></div>
+
     <template id="commTemplate">
       <div class="comm-row">
         <input class="utc-time" inputmode="numeric" placeholder="HHMMZ">
@@ -85,7 +87,6 @@
         </label>
         <div class="comm-record">
           <textarea class="comm-note" rows="2" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" inputmode="text"></textarea>
-          <div class="phrase-bar" aria-label="常用通信模板"></div>
         </div>
       </div>
     </template>
@@ -110,7 +111,7 @@
       </article>
     </template>
 
-    <script src="app.js?v=41"></script>
+    <script src="app.js?v=53"></script>
   
 
 </body></html>

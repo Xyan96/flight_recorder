@@ -6,11 +6,11 @@ Project purpose: restored and deployed flight communication/cruise-check recorde
 
 ## Current Version
 
-Current app version: v41.
+Current app version: v53.
 
 Current URLs:
-- Local: http://127.0.0.1:8765/?v=41
-- Public: https://flight.tuomakazusa.online/?v=41
+- Local: http://127.0.0.1:8765/?v=53
+- Public: https://flight.tuomakazusa.online/?v=53
 
 Main project path:
 - /Users/xiazhiyuan/Documents/Codex/fljght_recorder
@@ -58,7 +58,14 @@ Flight records:
 - FN archive is shared across users.
 
 UI and input:
-- Quick input buttons currently include RCD, MT, RP, DR, climb, descend, left/right turn, RWY, P/S, L/U, T/O, L/D, QNH.
+- Quick input buttons currently include RCD, HSO, HD, RP, DR, climb, descend, left/right turn, RWY, P/S, L/U, T/O, L/D, QNH.
+- v47 moves quick input buttons from every communication row into one bottom fixed quick input dock shown while editing a communication note, moves the dock above the iPad keyboard with VisualViewport, avoids squeezing the right-side check panel, keeps newer local pending records visible, and adds manual upload/retry for local pending records.
+- v48 only auto-stamps UTC time after the communication note has actual input; focusing a row or VHF field no longer stamps time.
+- v49 positions the quick input dock by VisualViewport top/height instead of a bottom offset, with repeated recalculation during the iPad keyboard animation.
+- v50 replaces MT with HSO/HD quick keys, places HSO/HD in positions 2/3, uses numeric keyboard after HD, and auto-adds a trailing space after all quick keys except climb/descend/turns/RWY.
+- v51 keeps the numeric keyboard mode active across continuous input after numeric quick keys instead of switching back to text after the first digit.
+- v52 changed FN normalization target length from 7 to 8 total characters.
+- v53 restricts FN to digits only; normalization strips non-digits, keeps the last 8 digits, and pads with leading zeros to 8 digits.
 - Native keyboard behavior was restored after forced uppercase/digital keyboard bugs.
 - Record folder layout was adjusted multiple times: narrower dialog, separated controls, search beside flight number under Close row.
 - Top bar was adjusted: captain name input is about five Chinese characters wide, FN keeps more width, top row columns are more balanced.

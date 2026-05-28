@@ -8,9 +8,11 @@ const LICENSE_SYNC_URL = "license-archive.json";
 const RECORDS_URL = "flight-records";
 const COMM_ROWS = 8;
 const CHECK_ROWS = 3;
+const FN_LENGTH = 8;
 const PHRASES = [
   { label: "RCD", value: "RCD" },
-  { label: "MT", value: "MT" },
+  { label: "HSO", value: "HSO" },
+  { label: "HD", value: "HD" },
   { label: "RP", value: "RP" },
   { label: "DR", value: "DR" },
   { label: "↑", value: "↑", title: "上升" },
@@ -24,7 +26,8 @@ const PHRASES = [
   { label: "L/D", value: "L/D" },
   { label: "QNH", value: "QNH" },
 ];
-const NUMERIC_AFTER_PHRASES = new Set(["↑", "↓", "↰", "↱", "RWY", "QNH"]);
+const NUMERIC_AFTER_PHRASES = new Set(["HD", "↑", "↓", "↰", "↱", "RWY", "QNH"]);
+const NO_SPACE_AFTER_PHRASES = new Set(["↑", "↓", "↰", "↱", "RWY"]);
 const LICENSE_ARCHIVE_RAW = `
 唐棣玺3743
 陈志明14489
@@ -322,26 +325,74 @@ function completeVhfInput(value) {
   return `${head}.${tail}`;
 }
 
-function insertAtCursor(textarea, text) {
+function insertAtCursor(textarea, text, options = {}) {
   const prefix = textarea.value && !textarea.value.endsWith(" ") ? " " : "";
+  const suffix = options.trailingSpace ? " " : "";
   const start = textarea.selectionStart ?? textarea.value.length;
   const end = textarea.selectionEnd ?? textarea.value.length;
-  const next = `${textarea.value.slice(0, start)}${prefix}${text}${textarea.value.slice(end)}`;
+  const next = `${textarea.value.slice(0, start)}${prefix}${text}${suffix}${textarea.value.slice(end)}`;
   textarea.value = next;
-  const caret = start + prefix.length + text.length;
+  const caret = start + prefix.length + text.length + suffix.length;
   textarea.focus();
   textarea.setSelectionRange(caret, caret);
 }
 
+function quickPhraseDock() {
+  return $("#quickPhraseDock");
+}
+
+function updateQuickPhraseDockPosition() {
+  const dock = quickPhraseDock();
+  const viewport = window.visualViewport;
+  const margin = 8;
+  const dockHeight = dock.offsetHeight || 62;
+  const visibleTop = viewport ? viewport.offsetTop : 0;
+  const visibleHeight = viewport ? viewport.height : window.innerHeight;
+  const top = Math.max(margin, visibleTop + visibleHeight - dockHeight - margin);
+  document.documentElement.style.setProperty("--quick-phrase-top", `${Math.round(top)}px`);
+}
+
+function scheduleQuickPhraseDockPosition() {
+  updateQuickPhraseDockPosition();
+  requestAnimationFrame(updateQuickPhraseDockPosition);
+  [80, 180, 360, 650].forEach((delay) => window.setTimeout(updateQuickPhraseDockPosition, delay));
+}
+
+function showQuickPhraseDock() {
+  quickPhraseDock().hidden = false;
+  document.body.classList.add("quick-phrase-open");
+  scheduleQuickPhraseDockPosition();
+}
+
+function hideQuickPhraseDock() {
+  activeCommNote = null;
+  quickPhraseDock().hidden = true;
+  document.body.classList.remove("quick-phrase-open");
+}
+
+function setActiveCommNote(textarea) {
+  activeCommNote = textarea;
+  showQuickPhraseDock();
+}
+
+function setPhraseKeyboardHint(textarea, mode) {
+  textarea.dataset.phraseKeyboardHint = mode;
+}
+
 function activatePhraseButton(button) {
-  const row = button.closest(".comm-row");
-  const note = $(".comm-note", row);
+  const note = activeCommNote;
   const phrase = button.dataset.phrase;
+  if (!note || !document.contains(note)) {
+    hideQuickPhraseDock();
+    return;
+  }
   stampRow(note);
-  insertAtCursor(note, phrase);
+  insertAtCursor(note, phrase, { trailingSpace: !NO_SPACE_AFTER_PHRASES.has(phrase) });
   if (NUMERIC_AFTER_PHRASES.has(phrase)) {
+    setPhraseKeyboardHint(note, "numeric");
     preferNumericKeyboard(note, true);
   } else {
+    setPhraseKeyboardHint(note, "text");
     preferUppercaseKeyboard(note, true);
   }
   save();
@@ -392,11 +443,9 @@ function normalizeName(name) {
 }
 
 function normalizeFn(code) {
-  const compact = String(code).replace(/\s+/g, "").toUpperCase();
-  const prefixed = compact.match(/^([A-Z]+)(\d+)$/);
-  if (prefixed) return `${prefixed[1]}${prefixed[2].padStart(7 - prefixed[1].length, "0")}`;
-  if (!/\d/.test(compact)) return "";
-  return compact.replace(/\D/g, "").padStart(7, "0");
+  const digits = String(code).replace(/\D/g, "");
+  if (!digits) return "";
+  return digits.slice(-FN_LENGTH).padStart(FN_LENGTH, "0");
 }
 
 function parseLicenseLine(line) {
@@ -422,6 +471,7 @@ const LICENSE_ARCHIVE = buildLicenseArchive(LICENSE_ARCHIVE_RAW);
 let customLicenseArchive = loadCustomLicenseArchive();
 let lastSavedFlightKey = "";
 let pendingSyncInFlight = false;
+let activeCommNote = null;
 const COMMON_IDS = [
   "aircraftNo",
   "flightNo",
@@ -513,16 +563,6 @@ function createRows() {
     const row = commTemplate.content.cloneNode(true);
     const commRow = row.querySelector(".comm-row");
     commRow.dataset.index = i;
-    const bar = row.querySelector(".phrase-bar");
-    PHRASES.forEach((phrase) => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "phrase-button";
-      button.dataset.phrase = phrase.value;
-      button.textContent = phrase.label;
-      if (phrase.title) button.title = phrase.title;
-      bar.append(button);
-    });
     commRows.append(row);
   }
 
@@ -531,6 +571,20 @@ function createRows() {
     row.querySelector(".check-card").dataset.index = i;
     checkRows.append(row);
   }
+}
+
+function createQuickPhraseDock() {
+  const dock = quickPhraseDock();
+  dock.replaceChildren();
+  PHRASES.forEach((phrase) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "phrase-button";
+    button.dataset.phrase = phrase.value;
+    button.textContent = phrase.label;
+    if (phrase.title) button.title = phrase.title;
+    dock.append(button);
+  });
 }
 
 function stampRow(target) {
@@ -708,6 +762,15 @@ function writePendingRecordArchive(records) {
   localStorage.setItem(PENDING_RECORD_ARCHIVE_KEY, JSON.stringify(records));
 }
 
+function pendingRecordsToSync() {
+  const records = new Map();
+  [...pendingRecordArchive(), ...localRecordArchive().filter((record) => record.meta?.pending)].forEach((record) => {
+    if (!record?.state || !record?.meta) return;
+    records.set(record.id || `${recordFlightKey(record)}|${record.meta.savedAt || ""}`, record);
+  });
+  return sortRecordsNewestFirst([...records.values()]);
+}
+
 function sortRecordsNewestFirst(records) {
   return [...records].sort((a, b) => String(b.meta?.savedAt || b.savedAt || "").localeCompare(String(a.meta?.savedAt || a.savedAt || "")));
 }
@@ -831,7 +894,7 @@ async function saveFlightRecordSilently() {
 }
 
 async function syncPendingFlightRecords() {
-  const pending = pendingRecordArchive();
+  const pending = pendingRecordsToSync();
   if (!pending.length || pendingSyncInFlight) return;
   pendingSyncInFlight = true;
   const remaining = [];
@@ -863,6 +926,33 @@ async function syncPendingFlightRecords() {
   }
 }
 
+async function uploadLocalRecord(id) {
+  const record = localRecordArchive().find((item) => item.id === id);
+  if (!record?.state || !record?.meta) {
+    window.alert("本机记录不存在，无法上传。");
+    return;
+  }
+  try {
+    const response = await fetch(RECORDS_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ meta: record.meta, state: record.state }),
+    });
+    if (!response.ok) throw new Error("upload failed");
+    const data = await response.json();
+    const archive = localRecordArchive().map((item) =>
+      item.id === id ? { ...item, meta: { ...item.meta, pending: false } } : item
+    );
+    writeLocalRecordArchive(archive);
+    writePendingRecordArchive(pendingRecordArchive().filter((item) => item.id !== id));
+    markCurrentFlightSaved(data.record);
+    await searchFlightRecords();
+    window.alert(`已上传：${data.record.dateUtc} ${data.record.flightNo}`);
+  } catch {
+    window.alert("上传失败：请确认这台电脑在线且公网访问已连接，然后再点上传。");
+  }
+}
+
 function retryPendingSync() {
   syncCustomLicenseArchive();
   syncPendingFlightRecords();
@@ -889,19 +979,21 @@ async function searchFlightRecords() {
 function renderArchiveResults(records, localOnly) {
   const root = $("#archiveResults");
   root.replaceChildren();
-  const deduped = [];
-  const seen = new Set();
+  const latest = new Map();
   for (const record of sortRecordsNewestFirst(records)) {
     const key = recordFlightKey(record) || record.id;
-    if (seen.has(key) && record.localOnly) continue;
-    if (seen.has(key)) {
-      const index = deduped.findIndex((item) => (recordFlightKey(item) || item.id) === key);
-      if (index >= 0 && deduped[index].localOnly) deduped[index] = record;
+    const current = latest.get(key);
+    if (!current) {
+      latest.set(key, record);
       continue;
     }
-    seen.add(key);
-    deduped.push(record);
+    const recordTime = String(record.savedAt || "");
+    const currentTime = String(current.savedAt || "");
+    if (recordTime > currentTime || (recordTime === currentTime && current.localOnly && !record.localOnly)) {
+      latest.set(key, record);
+    }
   }
+  const deduped = sortRecordsNewestFirst([...latest.values()]);
   if (!deduped.length) {
     root.textContent = "没有找到记录";
     return;
@@ -915,13 +1007,15 @@ function renderArchiveResults(records, localOnly) {
     title.textContent = `${record.dateUtc || ""} ${record.flightNo || ""} ${record.sector || ""}`.trim();
     const meta = document.createElement("div");
     meta.className = "archive-meta";
-    meta.textContent = `${record.localOnly ? "本机" : "服务器"} ${record.aircraftNo || ""} ${record.captain || ""} ${record.savedAt || ""}`.trim();
+    const source = record.localOnly ? (record.pending ? "本机待上传" : "本机") : "服务器";
+    meta.textContent = `${source} ${record.aircraftNo || ""} ${record.captain || ""} ${record.savedAt || ""}`.trim();
     text.append(title, meta);
     const button = document.createElement("button");
     button.type = "button";
-    button.textContent = "载入";
+    button.textContent = record.localOnly && record.pending ? "上传" : "载入";
     button.dataset.recordId = record.id;
     button.dataset.localRecord = localOnly || record.localOnly ? "1" : "";
+    if (record.localOnly && record.pending) button.dataset.uploadRecord = "1";
     item.append(text, button);
     root.append(item);
   });
@@ -942,9 +1036,11 @@ async function loadFlightRecord(id, localOnly) {
   renderState();
   save();
   $("#archivePanel").hidden = true;
+  hideQuickPhraseDock();
 }
 
 function openArchivePanel() {
+  hideQuickPhraseDock();
   $("#archivePanel").hidden = false;
   $("#archiveDate").value = "";
   $("#archiveFlightNo").value = "";
@@ -1066,12 +1162,33 @@ function bindEvents() {
 
   document.addEventListener("focusin", (event) => {
     if (event.target.matches(".comm-note, .vhf-rest")) {
-      stampRow(event.target);
       if (event.target.matches(".comm-note")) {
-        preferUppercaseKeyboard(event.target);
+        setActiveCommNote(event.target);
+        if (event.target.dataset.phraseKeyboardHint === "numeric") {
+          preferNumericKeyboard(event.target);
+        } else {
+          preferUppercaseKeyboard(event.target);
+        }
+      } else {
+        hideQuickPhraseDock();
       }
-      save();
+      return;
     }
+
+    if (!event.target.closest("#quickPhraseDock")) hideQuickPhraseDock();
+  });
+
+  quickPhraseDock().addEventListener("pointerdown", (event) => {
+    if (event.target.closest(".phrase-button")) event.preventDefault();
+  });
+
+  window.visualViewport?.addEventListener("resize", updateQuickPhraseDockPosition);
+  window.visualViewport?.addEventListener("scroll", updateQuickPhraseDockPosition);
+  window.addEventListener("resize", updateQuickPhraseDockPosition);
+
+  document.addEventListener("pointerdown", (event) => {
+    if (event.target.closest(".comm-note, #quickPhraseDock")) return;
+    hideQuickPhraseDock();
   });
 
   document.addEventListener(
@@ -1099,7 +1216,7 @@ function bindEvents() {
     "touchend",
     (event) => {
       if (event.changedTouches.length !== 1 || event.touches.length > 0) return;
-      if (event.target.closest("button, input, textarea, select, label, .phrase-bar")) return;
+      if (event.target.closest("button, input, textarea, select, label, #quickPhraseDock")) return;
       const now = Date.now();
       if (now - lastSingleTouchAt < 320) event.preventDefault();
       lastSingleTouchAt = now;
@@ -1110,6 +1227,7 @@ function bindEvents() {
   document.addEventListener("compositionend", (event) => {
     if (event.target.matches(".comm-note")) {
       uppercaseLatinInput(event.target);
+      if (event.target.value.trim()) stampRow(event.target);
     }
     if (event.target.matches("#sectorFrom, #sectorTo")) {
       event.target.dataset.composing = "";
@@ -1137,14 +1255,24 @@ function bindEvents() {
       event.target.value = event.target.value.replace(/\D/g, "").slice(0, event.target.maxLength || 4);
     }
 
+    if (event.target.matches("#captainFn")) {
+      event.target.value = event.target.value.replace(/\D/g, "").slice(0, FN_LENGTH);
+    }
+
     if (event.target.matches("#sectorFrom, #sectorTo")) {
       if (event.target.dataset.composing === "1") return;
       event.target.value = event.target.value.replace(/[^a-z0-9]/gi, "").toUpperCase().slice(0, 4);
     }
 
     if (event.target.matches(".comm-note")) {
-      preferUppercaseKeyboard(event.target);
+      setActiveCommNote(event.target);
+      if (event.target.dataset.phraseKeyboardHint === "numeric") {
+        preferNumericKeyboard(event.target);
+      } else {
+        preferUppercaseKeyboard(event.target);
+      }
       uppercaseLatinInput(event.target);
+      if (event.target.value.trim()) stampRow(event.target);
     }
 
     if (event.target.matches("#captain")) updateCaptainFn();
@@ -1176,6 +1304,11 @@ function bindEvents() {
   document.addEventListener("click", (event) => {
     if (event.target.matches(".phrase-button")) {
       if (Date.now() - lastPhraseTouchAt > 500) activatePhraseButton(event.target);
+      return;
+    }
+
+    if (event.target.matches("[data-upload-record]")) {
+      uploadLocalRecord(event.target.dataset.recordId);
       return;
     }
 
@@ -1211,6 +1344,7 @@ function bindEvents() {
 async function boot() {
   applyTheme(localStorage.getItem(THEME_KEY) || "light");
   createRows();
+  createQuickPhraseDock();
   await loadRemoteLicenseArchive();
   restore();
   bindEvents();
