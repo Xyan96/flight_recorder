@@ -1,9 +1,9 @@
-const CACHE_NAME = "flight-log-cache-v53";
+const CACHE_NAME = "flight-log-cache-v62";
 const ASSETS = [
   "./",
   "./index.html",
-  "./styles.css?v=53",
-  "./app.js?v=53",
+  "./styles.css?v=62",
+  "./app.js?v=62",
   "./manifest.json",
   "./icon.svg",
   "./icon-180.png",
@@ -27,12 +27,10 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
   if (event.request.mode === "navigate") {
-    event.respondWith(
-      fetch(event.request).catch(() => caches.match("./index.html"))
-    );
+    event.respondWith(caches.match("./index.html"));
     return;
   }
   event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request))
+    caches.match(event.request).then((cached) => cached || Response.error())
   );
 });

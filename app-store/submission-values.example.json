@@ -1,0 +1,17 @@
+{
+  "supportEmail": "support@example.com",
+  "supportUrl": "https://example.github.io/flight-recorder/support.html",
+  "privacyUrl": "https://example.github.io/flight-recorder/privacy.html",
+  "staticHostingLocation": "GitHub Pages or your domain: https://example.github.io/flight-recorder/",
+  "price": "免费",
+  "regions": "所有国家和地区",
+  "developerDisplayName": "待填写的开发者显示名称",
+  "reviewContactName": "待填写的审核联系人姓名",
+  "reviewContactPhone": "+86 000 0000 0000",
+  "reviewContactEmail": "review-contact@example.com",
+  "deviceInstallStatus": "已通过，YYYY-MM-DD，iPad Air 第五代，Xcode Run 成功",
+  "offlineSaveStatus": "已通过，飞行模式下保存提示为“已保存到 iPad”",
+  "archiveLoadStatus": "已通过，记录夹可载入刚保存的记录",
+  "backupStatus": "已通过，备份可导出并重新导入",
+  "screenshotDataStatus": "已通过，截图只使用虚构测试数据"
+}

@@ -5,3 +5,12 @@ __pycache__/
 deployment/*.log
 deployment/__pycache__/
 飞行联络与巡航检查记录_RESTORED.zip
+node_modules/
+build/
+ios/App/Pods/
+ios/App/build/
+ios/App/DerivedData/
+ios/**/xcuserdata/
+*.xcuserstate
+app-store/submission-values.json
+app-store/device-test-results.json

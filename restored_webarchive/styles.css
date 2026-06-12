@@ -12,7 +12,9 @@
   --accent: #176b87;
   --accent-soft: #e8f4f7;
   --danger: #a33d35;
+  --danger-bg: #fff2ee;
   --shadow: 0 10px 26px rgba(39, 35, 28, 0.12);
+  --app-height: 100dvh;
 }
 
 html[data-theme="dark"] {
@@ -29,6 +31,7 @@ html[data-theme="dark"] {
   --accent: #74c7e3;
   --accent-soft: #173241;
   --danger: #ff8b81;
+  --danger-bg: #3a2020;
   --shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
 }
 
@@ -48,7 +51,8 @@ body {
 }
 
 body {
-  padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+  padding: 0;
+  min-height: var(--app-height);
 }
 
 button,
@@ -77,13 +81,16 @@ button:disabled {
 }
 
 .app-shell {
-  width: min(1360px, 100%);
-  height: calc(100dvh - max(16px, env(safe-area-inset-top) + env(safe-area-inset-bottom)));
-  margin: 0 auto;
+  width: 100%;
+  height: var(--app-height);
+  min-height: var(--app-height);
+  margin: 0;
+  padding: 6px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
   min-height: 0;
+  background: var(--app-bg);
 }
 
 .top-bar,
@@ -112,10 +119,10 @@ button:disabled {
 
 .top-bar {
   grid-template-columns:
-    minmax(92px, 0.72fr)
-    minmax(104px, 0.78fr)
-    minmax(168px, 1.08fr)
-    minmax(236px, 1.22fr)
+    minmax(82px, 0.66fr)
+    minmax(96px, 0.72fr)
+    minmax(158px, 1fr)
+    minmax(228px, 1.16fr)
     minmax(196px, 1fr);
 }
 
@@ -298,7 +305,7 @@ label {
 }
 
 .archive-item {
-  grid-template-columns: minmax(0, 1fr) 74px;
+  grid-template-columns: minmax(0, 1fr) auto;
   padding: 8px;
   border: 1px solid var(--grid-line);
   border-radius: 6px;
@@ -313,6 +320,24 @@ label {
 .archive-meta {
   color: var(--muted);
   font-size: 12px;
+}
+
+.archive-item-actions {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: 6px;
+}
+
+.archive-item-actions button {
+  min-width: 62px;
+  padding-inline: 8px;
+}
+
+.archive-delete {
+  border-color: var(--danger);
+  background: var(--danger-bg);
+  color: var(--danger);
 }
 
 input,
@@ -343,7 +368,7 @@ output {
 .sheet {
   flex: 1;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(360px, 0.68fr);
+  grid-template-columns: minmax(0, 1fr) minmax(400px, 0.72fr);
   border: 1px solid var(--grid-line);
   border-radius: 8px;
   background: var(--paper);
@@ -432,7 +457,7 @@ output {
 .quick-phrase-dock {
   position: fixed;
   left: 50%;
-  top: var(--quick-phrase-top, calc(100dvh - 70px));
+  top: var(--quick-phrase-top, calc(var(--app-height) - 70px));
   z-index: 9;
   width: min(1360px, calc(100% - 16px));
   display: flex;
@@ -528,19 +553,23 @@ output {
 .checks-panel {
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .check-list {
-  display: grid;
-  grid-template-rows: repeat(3, minmax(0, 1fr));
+  display: flex;
+  flex-direction: column;
   flex: 1;
   min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .check-card {
+  flex: 0 0 auto;
   border-bottom: 1px solid var(--grid-line);
   min-height: 0;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .check-card header {
@@ -565,9 +594,9 @@ output {
 
 .check-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(120px, 1fr));
-  gap: 4px;
-  padding: 4px 8px;
+  grid-template-columns: repeat(3, minmax(108px, 1fr));
+  gap: 3px 4px;
+  padding: 4px 8px 6px;
 }
 
 .check-grid label {
@@ -604,7 +633,7 @@ output {
 
 @media (max-width: 700px) {
   body {
-    padding: 8px;
+    padding: 0;
     overflow: auto;
   }
 
@@ -615,6 +644,7 @@ output {
 
   .app-shell {
     height: auto;
+    padding: 8px;
   }
 
   .top-bar,

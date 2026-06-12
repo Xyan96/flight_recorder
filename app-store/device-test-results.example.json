@@ -1,0 +1,23 @@
+{
+  "testDate": "2026-06-12",
+  "tester": "待填写测试人",
+  "device": "iPad Air 第五代",
+  "iPadOSVersion": "待填写 iPadOS 版本",
+  "xcodeVersion": "Xcode 26.5",
+  "bundleId": "com.xiazhiyuan.flightrecorder",
+  "appVersion": "1.0",
+  "buildNumber": "1",
+  "xcodeRunInstalled": false,
+  "developerTeamSelected": false,
+  "airplaneModeEnabled": false,
+  "appLaunchesOffline": false,
+  "offlineSavePromptShowsSavedToIpad": false,
+  "recordFolderShowsIpadSource": false,
+  "recordLoadRestoresMainForm": false,
+  "backupExportWorks": false,
+  "backupImportWorks": false,
+  "restartKeepsRecords": false,
+  "noLoginOrCloudflareScreen": false,
+  "screenshotsUseFictionalData": false,
+  "notes": "真机测试通过后复制为 app-store/device-test-results.json，并把 false 改为 true。"
+}

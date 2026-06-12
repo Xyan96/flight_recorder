@@ -1,0 +1,16 @@
+{
+  "appId": "com.xiazhiyuan.flightrecorder",
+  "appName": "飞行记录",
+  "webDir": "restored_webarchive",
+  "ios": {
+    "contentInset": "automatic"
+  },
+  "plugins": {
+    "CapacitorCookies": {
+      "enabled": false
+    },
+    "CapacitorHttp": {
+      "enabled": false
+    }
+  }
+}

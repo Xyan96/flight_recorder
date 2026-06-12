@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "exportedAt": "2026-06-12T00:00:00.000Z",
+  "records": [
+    {
+      "id": "2026-06-12-CA9999-2026-06-12T00:00:00.000Z.json",
+      "meta": {
+        "dateUtc": "2026-06-12",
+        "flightNo": "CA9999",
+        "sector": "TST-APP",
+        "aircraftNo": "B-9999",
+        "captain": "测试",
+        "savedAt": "2026-06-12T00:00:00.000Z",
+        "pending": false
+      },
+      "state": {
+        "common": {
+          "aircraftNo": "9999",
+          "flightNo": "9999",
+          "sectorFrom": "TST",
+          "sectorTo": "APP",
+          "captain": "测试",
+          "captainFn": "00000001",
+          "dateUtc": "2026-06-12"
+        },
+        "pages": [
+          {
+            "utc-time-0": "0100",
+            "vhf-rest-0": "121.500",
+            "comm-note-0": "RCD TEST CLR TST-APP",
+            "utc-time-1": "0118",
+            "vhf-rest-1": "125.300",
+            "comm-note-1": "CLB FL350 TEST",
+            "utc-time-2": "0145",
+            "vhf-rest-2": "128.900",
+            "comm-note-2": "INFO A QNH 1013",
+            "utc-time-3": "",
+            "vhf-rest-3": "118.000",
+            "comm-note-3": "",
+            "utc-time-4": "",
+            "vhf-rest-4": "118.000",
+            "comm-note-4": "",
+            "utc-time-5": "",
+            "vhf-rest-5": "118.000",
+            "comm-note-5": "",
+            "utc-time-6": "",
+            "vhf-rest-6": "118.000",
+            "comm-note-6": "",
+            "utc-time-7": "",
+            "vhf-rest-7": "118.000",
+            "comm-note-7": "",
+            "check-time-0": "0100z",
+            "oil-l-0": "17.2",
+            "oil-r-0": "17.0",
+            "used-fuel-0": "2200",
+            "onboard-fuel-0": "11000",
+            "wind-dir-0": "270",
+            "wind-speed-0": "45",
+            "check-time-1": "0130z",
+            "oil-l-1": "16.8",
+            "oil-r-1": "16.7",
+            "used-fuel-1": "4200",
+            "onboard-fuel-1": "9000",
+            "wind-dir-1": "250",
+            "wind-speed-1": "38",
+            "check-time-2": "",
+            "oil-l-2": "",
+            "oil-r-2": "",
+            "used-fuel-2": "",
+            "onboard-fuel-2": "",
+            "wind-dir-2": "",
+            "wind-speed-2": "",
+            "todo": "测试数据，仅用于 App Store 截图。",
+            "preOil": "18.5",
+            "oxygen": "1850",
+            "releaseFuel": "12800",
+            "actualFuel": "13200"
+          }
+        ],
+        "currentPage": 0,
+        "savedFlightKey": "2026-06-12|CA9999"
+      }
+    }
+  ]
+}

@@ -3,11 +3,11 @@ credentials-file: /Users/xiazhiyuan/.cloudflared/2b606329-b63c-4e0f-8b8d-a4bffe2
 protocol: http2
 
 ingress:
-  - hostname: drive.tuomakazusa.online
+  - hostname: drive.example.invalid
     service: http://192.168.124.102:5000
-  - hostname: sync.tuomakazusa.online
+  - hostname: sync.example.invalid
     path: /drive/*
     service: http://192.168.124.102
-  - hostname: flight.tuomakazusa.online
+  - hostname: flight.example.invalid
     service: http://127.0.0.1:8765
   - service: http_status:404

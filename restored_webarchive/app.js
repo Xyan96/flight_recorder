@@ -6,8 +6,14 @@ const RECORD_ARCHIVE_KEY = "flight-log-record-archive-v1";
 const PENDING_RECORD_ARCHIVE_KEY = "flight-log-pending-records-v1";
 const LICENSE_SYNC_URL = "license-archive.json";
 const RECORDS_URL = "flight-records";
+const LOCAL_ONLY_MODE =
+  new URLSearchParams(window.location.search).get("local") === "1" ||
+  ["capacitor:", "ionic:", "file:"].includes(window.location.protocol) ||
+  Boolean(window.Capacitor?.isNativePlatform?.());
+const SMOKE_TEST_MODE = new URLSearchParams(window.location.search).get("smoke") === "1";
+const LOCAL_RECORD_SOURCE = LOCAL_ONLY_MODE ? "iPad" : "本机";
 const COMM_ROWS = 8;
-const CHECK_ROWS = 3;
+const CHECK_ROWS = 4;
 const FN_LENGTH = 8;
 const PHRASES = [
   { label: "RCD", value: "RCD" },
@@ -28,6 +34,41 @@ const PHRASES = [
 ];
 const NUMERIC_AFTER_PHRASES = new Set(["HD", "↑", "↓", "↰", "↱", "RWY", "QNH"]);
 const NO_SPACE_AFTER_PHRASES = new Set(["↑", "↓", "↰", "↱", "RWY"]);
+let stableAppViewportHeight = 0;
+let stableAppViewportWidth = 0;
+
+function isKeyboardViewportResize() {
+  const viewport = window.visualViewport;
+  if (!viewport || !document.activeElement?.matches("input, textarea")) return false;
+  const layoutHeight = window.innerHeight || document.documentElement.clientHeight || viewport.height;
+  return viewport.height + viewport.offsetTop < layoutHeight - 80;
+}
+
+function updateAppViewportHeight({ reset = false } = {}) {
+  const viewport = window.visualViewport;
+  const width = Math.max(viewport?.width || 0, window.innerWidth || 0, document.documentElement.clientWidth || 0);
+  const height = Math.max(viewport?.height || 0, window.innerHeight || 0, document.documentElement.clientHeight || 0);
+  if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) return;
+  if (reset || !stableAppViewportWidth || Math.abs(width - stableAppViewportWidth) > 80) {
+    stableAppViewportWidth = width;
+    stableAppViewportHeight = 0;
+  }
+  const roundedHeight = Math.round(height);
+  if (!stableAppViewportHeight || roundedHeight > stableAppViewportHeight || !isKeyboardViewportResize()) {
+    stableAppViewportHeight = roundedHeight;
+  }
+  document.documentElement.style.setProperty("--app-height", `${stableAppViewportHeight}px`);
+}
+
+function scheduleAppViewportHeightUpdate(options = {}) {
+  updateAppViewportHeight(options);
+  requestAnimationFrame(() => updateAppViewportHeight(options));
+  [60, 160, 320, 700, 1200].forEach((delay) =>
+    window.setTimeout(() => updateAppViewportHeight(options), delay)
+  );
+}
+
+scheduleAppViewportHeightUpdate({ reset: true });
 const LICENSE_ARCHIVE_RAW = `
 唐棣玺3743
 陈志明14489
@@ -269,6 +310,22 @@ const LICENSE_ARCHIVE_RAW = `
 陈震3423
 `;
 
+function notify(message) {
+  if (!SMOKE_TEST_MODE) {
+    window.alert(message);
+    return;
+  }
+  const key = "flight-log-smoke-alerts";
+  let alerts = [];
+  try {
+    alerts = JSON.parse(localStorage.getItem(key) || "[]");
+  } catch {
+    alerts = [];
+  }
+  alerts.push(String(message));
+  localStorage.setItem(key, JSON.stringify(alerts));
+}
+
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 
@@ -358,16 +415,42 @@ function scheduleQuickPhraseDockPosition() {
   [80, 180, 360, 650].forEach((delay) => window.setTimeout(updateQuickPhraseDockPosition, delay));
 }
 
-function showQuickPhraseDock() {
+function revealQuickPhraseDock() {
   quickPhraseDock().hidden = false;
   document.body.classList.add("quick-phrase-open");
   scheduleQuickPhraseDockPosition();
 }
 
-function hideQuickPhraseDock() {
-  activeCommNote = null;
+function hideQuickPhraseDock({ clearActive = true } = {}) {
+  if (clearActive) activeCommNote = null;
   quickPhraseDock().hidden = true;
   document.body.classList.remove("quick-phrase-open");
+}
+
+function syncQuickPhraseDockWithKeyboard() {
+  if (!activeCommNote || document.activeElement !== activeCommNote) {
+    hideQuickPhraseDock();
+    return;
+  }
+  if (isKeyboardViewportResize()) {
+    revealQuickPhraseDock();
+    return;
+  }
+  hideQuickPhraseDock({ clearActive: false });
+}
+
+function scheduleQuickPhraseDockSync() {
+  syncQuickPhraseDockWithKeyboard();
+  requestAnimationFrame(syncQuickPhraseDockWithKeyboard);
+  [80, 180, 360, 650].forEach((delay) => window.setTimeout(syncQuickPhraseDockWithKeyboard, delay));
+}
+
+function showQuickPhraseDock() {
+  if (window.visualViewport && !isKeyboardViewportResize()) {
+    scheduleQuickPhraseDockSync();
+    return;
+  }
+  revealQuickPhraseDock();
 }
 
 function setActiveCommNote(textarea) {
@@ -512,6 +595,7 @@ function loadCustomLicenseArchive() {
 }
 
 async function loadRemoteLicenseArchive() {
+  if (LOCAL_ONLY_MODE) return;
   try {
     const response = await fetch(`${LICENSE_SYNC_URL}?t=${Date.now()}`, { cache: "no-store" });
     if (!response.ok) return;
@@ -536,6 +620,7 @@ function persistCustomLicense(name, code) {
 }
 
 async function syncCustomLicenseArchive() {
+  if (LOCAL_ONLY_MODE) return;
   if (!navigator.onLine || !Object.keys(customLicenseArchive).length) return;
   try {
     await loadRemoteLicenseArchive();
@@ -771,17 +856,34 @@ function pendingRecordsToSync() {
   return sortRecordsNewestFirst([...records.values()]);
 }
 
+function clearPendingStateForLocalMode() {
+  if (!LOCAL_ONLY_MODE) return;
+  if (pendingRecordArchive().length) writePendingRecordArchive([]);
+  const archive = localRecordArchive();
+  if (!archive.some((record) => record.meta?.pending)) return;
+  writeLocalRecordArchive(archive.map((record) => ({ ...record, meta: { ...record.meta, pending: false } })));
+}
+
 function sortRecordsNewestFirst(records) {
   return [...records].sort((a, b) => String(b.meta?.savedAt || b.savedAt || "").localeCompare(String(a.meta?.savedAt || a.savedAt || "")));
 }
 
 function localRecordsForSearch(date, flightNo) {
   return localRecordArchive()
-    .map((record) => ({ ...record.meta, id: record.id, localOnly: true }))
+    .map((record) => ({
+      ...record.meta,
+      id: record.id,
+      localOnly: true,
+      pending: LOCAL_ONLY_MODE ? false : Boolean(record.meta?.pending),
+    }))
     .filter((record) => (!date || record.dateUtc === date) && (!flightNo || record.flightNo === `CA${flightNo}`));
 }
 
 async function listFlightRecords() {
+  if (LOCAL_ONLY_MODE) {
+    renderArchiveResults(localRecordsForSearch("", ""), true);
+    return;
+  }
   try {
     const response = await fetch(RECORDS_URL, { cache: "no-store" });
     if (!response.ok) throw new Error("list failed");
@@ -822,13 +924,13 @@ async function importLocalRecords(file) {
     incoming.forEach((record) => {
       if (!record?.state || !record?.meta) return;
       const id = record.id || `${record.meta.dateUtc}-${record.meta.flightNo}-${record.meta.savedAt || Date.now()}.json`;
-      merged.set(id, { ...record, id, meta: { ...record.meta, pending: Boolean(record.meta.pending) } });
+      merged.set(id, { ...record, id, meta: { ...record.meta, pending: !LOCAL_ONLY_MODE && Boolean(record.meta.pending) } });
     });
     writeLocalRecordArchive([...merged.values()]);
     listFlightRecords();
-    window.alert("本机记录已导入。请载入需要的记录后点击保存上传。");
+    notify(LOCAL_ONLY_MODE ? "备份记录已导入。" : "本机记录已导入。请载入需要的记录后点击保存上传。");
   } catch {
-    window.alert("导入失败：文件格式不正确。");
+    notify("导入失败：文件格式不正确。");
   } finally {
     $("#importLocalRecords").value = "";
   }
@@ -838,23 +940,32 @@ function saveLocalRecord(record, pending = false) {
   const key = recordFlightKey(record);
   const archive = localRecordArchive().filter((item) => !key || recordFlightKey(item) !== key);
   const savedAt = new Date().toISOString();
+  const shouldMarkPending = !LOCAL_ONLY_MODE && pending;
   const item = {
     ...record,
-    meta: { ...record.meta, savedAt, pending },
+    meta: { ...record.meta, savedAt, pending: shouldMarkPending },
     id: `${record.meta.dateUtc}-${record.meta.flightNo}-${savedAt}.json`,
   };
   archive.unshift(item);
   writeLocalRecordArchive(archive);
-  if (pending) {
+  if (shouldMarkPending) {
     const pendingArchive = pendingRecordArchive().filter((record) => !key || recordFlightKey(record) !== key);
     pendingArchive.unshift(item);
     writePendingRecordArchive(sortRecordsNewestFirst(pendingArchive));
+  } else {
+    writePendingRecordArchive(pendingRecordArchive().filter((record) => !key || recordFlightKey(record) !== key));
   }
   return item.meta;
 }
 
 async function saveFlightRecord() {
   const record = flightRecordPayload();
+  if (LOCAL_ONLY_MODE) {
+    const meta = saveLocalRecord(record, false);
+    markCurrentFlightSaved(meta);
+    notify(`已保存到 iPad：${meta.dateUtc} ${meta.flightNo}`);
+    return { ok: true, record: meta, local: true };
+  }
   try {
     const response = await fetch(RECORDS_URL, {
       method: "POST",
@@ -864,18 +975,23 @@ async function saveFlightRecord() {
     if (!response.ok) throw new Error("save failed");
     const data = await response.json();
     markCurrentFlightSaved(data.record);
-    window.alert(`已保存：${data.record.dateUtc} ${data.record.flightNo}`);
+    notify(`已保存：${data.record.dateUtc} ${data.record.flightNo}`);
     return data;
   } catch {
     const meta = saveLocalRecord(record, true);
     markCurrentFlightSaved(meta);
-    window.alert(`离线保存成功，联网后会自动上传：${meta.dateUtc} ${meta.flightNo}`);
+    notify(`离线保存成功，联网后会自动上传：${meta.dateUtc} ${meta.flightNo}`);
     return { ok: false, record: meta, pending: true };
   }
 }
 
 async function saveFlightRecordSilently() {
   const record = flightRecordPayload();
+  if (LOCAL_ONLY_MODE) {
+    const meta = saveLocalRecord(record, false);
+    markCurrentFlightSaved(meta);
+    return { ok: true, record: meta, local: true };
+  }
   try {
     const response = await fetch(RECORDS_URL, {
       method: "POST",
@@ -894,6 +1010,10 @@ async function saveFlightRecordSilently() {
 }
 
 async function syncPendingFlightRecords() {
+  if (LOCAL_ONLY_MODE) {
+    clearPendingStateForLocalMode();
+    return;
+  }
   const pending = pendingRecordsToSync();
   if (!pending.length || pendingSyncInFlight) return;
   pendingSyncInFlight = true;
@@ -929,7 +1049,17 @@ async function syncPendingFlightRecords() {
 async function uploadLocalRecord(id) {
   const record = localRecordArchive().find((item) => item.id === id);
   if (!record?.state || !record?.meta) {
-    window.alert("本机记录不存在，无法上传。");
+    notify("本机记录不存在，无法上传。");
+    return;
+  }
+  if (LOCAL_ONLY_MODE) {
+    const archive = localRecordArchive().map((item) =>
+      item.id === id ? { ...item, meta: { ...item.meta, pending: false } } : item
+    );
+    writeLocalRecordArchive(archive);
+    writePendingRecordArchive(pendingRecordArchive().filter((item) => item.id !== id));
+    await searchFlightRecords();
+    notify("当前为 iPad 单机版，记录已保存在本机，无需上传。");
     return;
   }
   try {
@@ -947,13 +1077,17 @@ async function uploadLocalRecord(id) {
     writePendingRecordArchive(pendingRecordArchive().filter((item) => item.id !== id));
     markCurrentFlightSaved(data.record);
     await searchFlightRecords();
-    window.alert(`已上传：${data.record.dateUtc} ${data.record.flightNo}`);
+    notify(`已上传：${data.record.dateUtc} ${data.record.flightNo}`);
   } catch {
-    window.alert("上传失败：请确认这台电脑在线且公网访问已连接，然后再点上传。");
+    notify("上传失败：请确认这台电脑在线且公网访问已连接，然后再点上传。");
   }
 }
 
 function retryPendingSync() {
+  if (LOCAL_ONLY_MODE) {
+    clearPendingStateForLocalMode();
+    return;
+  }
   syncCustomLicenseArchive();
   syncPendingFlightRecords();
 }
@@ -961,6 +1095,10 @@ function retryPendingSync() {
 async function searchFlightRecords() {
   const date = $("#archiveDate").value.trim();
   const flightNo = $("#archiveFlightNo").value.trim();
+  if (LOCAL_ONLY_MODE) {
+    renderArchiveResults(localRecordsForSearch(date, flightNo), true);
+    return;
+  }
   try {
     const params = new URLSearchParams();
     if (date) params.set("date", date);
@@ -1007,23 +1145,55 @@ function renderArchiveResults(records, localOnly) {
     title.textContent = `${record.dateUtc || ""} ${record.flightNo || ""} ${record.sector || ""}`.trim();
     const meta = document.createElement("div");
     meta.className = "archive-meta";
-    const source = record.localOnly ? (record.pending ? "本机待上传" : "本机") : "服务器";
+    const source = record.localOnly ? (record.pending ? "本机待上传" : LOCAL_RECORD_SOURCE) : "服务器";
     meta.textContent = `${source} ${record.aircraftNo || ""} ${record.captain || ""} ${record.savedAt || ""}`.trim();
     text.append(title, meta);
-    const button = document.createElement("button");
-    button.type = "button";
-    button.textContent = record.localOnly && record.pending ? "上传" : "载入";
-    button.dataset.recordId = record.id;
-    button.dataset.localRecord = localOnly || record.localOnly ? "1" : "";
-    if (record.localOnly && record.pending) button.dataset.uploadRecord = "1";
-    item.append(text, button);
+    const actions = document.createElement("div");
+    actions.className = "archive-item-actions";
+    const canDelete = localOnly || record.localOnly || LOCAL_ONLY_MODE;
+    const deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.className = "archive-delete";
+    deleteButton.textContent = "删除";
+    if (canDelete) {
+      deleteButton.dataset.deleteRecord = record.id;
+    } else {
+      deleteButton.disabled = true;
+      deleteButton.title = "服务器记录不能在本机删除";
+    }
+    const loadButton = document.createElement("button");
+    loadButton.type = "button";
+    loadButton.textContent = record.localOnly && record.pending && !LOCAL_ONLY_MODE ? "上传" : "载入";
+    loadButton.dataset.recordId = record.id;
+    loadButton.dataset.localRecord = localOnly || record.localOnly ? "1" : "";
+    if (record.localOnly && record.pending && !LOCAL_ONLY_MODE) loadButton.dataset.uploadRecord = "1";
+    actions.append(deleteButton, loadButton);
+    item.append(text, actions);
     root.append(item);
   });
 }
 
+function deleteLocalFlightRecord(id) {
+  const record = localRecordArchive().find((item) => item.id === id);
+  if (!record) {
+    notify("没有找到可删除的本机记录");
+    searchFlightRecords();
+    return;
+  }
+  const title = `${record.meta?.dateUtc || ""} ${record.meta?.flightNo || ""} ${record.meta?.sector || ""}`.trim();
+  const ok = window.confirm(`确认删除这条记录吗？\n${title || "未命名记录"}\n删除后无法从本机记录夹恢复。`);
+  if (!ok) return;
+  writeLocalRecordArchive(localRecordArchive().filter((item) => item.id !== id));
+  writePendingRecordArchive(pendingRecordArchive().filter((item) => item.id !== id));
+  if (recordFlightKey(record) && lastSavedFlightKey === recordFlightKey(record)) lastSavedFlightKey = "";
+  searchFlightRecords();
+  updatePageControls();
+  notify("已删除记录");
+}
+
 async function loadFlightRecord(id, localOnly) {
   let record;
-  if (localOnly) {
+  if (localOnly || LOCAL_ONLY_MODE) {
     record = localRecordArchive().find((item) => item.id === id);
   } else {
     const response = await fetch(`${RECORDS_URL}/${encodeURIComponent(id)}`, { cache: "no-store" });
@@ -1182,11 +1352,20 @@ function bindEvents() {
     if (event.target.closest(".phrase-button")) event.preventDefault();
   });
 
-  window.visualViewport?.addEventListener("resize", updateQuickPhraseDockPosition);
-  window.visualViewport?.addEventListener("scroll", updateQuickPhraseDockPosition);
-  window.addEventListener("resize", updateQuickPhraseDockPosition);
+  window.visualViewport?.addEventListener("resize", scheduleQuickPhraseDockSync);
+  window.visualViewport?.addEventListener("scroll", scheduleQuickPhraseDockSync);
+  window.addEventListener("resize", scheduleQuickPhraseDockSync);
+  window.visualViewport?.addEventListener("resize", scheduleAppViewportHeightUpdate);
+  window.visualViewport?.addEventListener("scroll", scheduleAppViewportHeightUpdate);
+  window.addEventListener("resize", scheduleAppViewportHeightUpdate);
+  window.addEventListener("orientationchange", () => scheduleAppViewportHeightUpdate({ reset: true }));
+  window.addEventListener("pageshow", () => scheduleAppViewportHeightUpdate({ reset: true }));
 
   document.addEventListener("pointerdown", (event) => {
+    if (event.target.matches(".comm-note")) {
+      setActiveCommNote(event.target);
+      return;
+    }
     if (event.target.closest(".comm-note, #quickPhraseDock")) return;
     hideQuickPhraseDock();
   });
@@ -1307,6 +1486,11 @@ function bindEvents() {
       return;
     }
 
+    if (event.target.matches("[data-delete-record]")) {
+      deleteLocalFlightRecord(event.target.dataset.deleteRecord);
+      return;
+    }
+
     if (event.target.matches("[data-upload-record]")) {
       uploadLocalRecord(event.target.dataset.recordId);
       return;
@@ -1314,7 +1498,7 @@ function bindEvents() {
 
     if (event.target.matches("[data-record-id]")) {
       loadFlightRecord(event.target.dataset.recordId, event.target.dataset.localRecord === "1").catch(() => {
-        window.alert("载入失败");
+        notify("载入失败");
       });
       return;
     }
@@ -1342,16 +1526,25 @@ function bindEvents() {
 }
 
 async function boot() {
+  scheduleAppViewportHeightUpdate();
   applyTheme(localStorage.getItem(THEME_KEY) || "light");
   createRows();
   createQuickPhraseDock();
   await loadRemoteLicenseArchive();
+  clearPendingStateForLocalMode();
   restore();
   bindEvents();
   retryPendingSync();
 
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("sw.js").catch(() => {});
+    if (LOCAL_ONLY_MODE) {
+      navigator.serviceWorker
+        .getRegistrations?.()
+        .then((registrations) => registrations.forEach((registration) => registration.unregister()))
+        .catch(() => {});
+    } else {
+      navigator.serviceWorker.register("sw.js").catch(() => {});
+    }
   }
 }
 

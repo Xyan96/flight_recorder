@@ -1,16 +1,18 @@
 # fljght_recorder context
 
-Last updated: 2026-05-28 Asia/Shanghai.
+Last updated: 2026-06-12 Asia/Shanghai.
 
-Project purpose: restored and deployed flight communication/cruise-check recorder for iPad/Mac use, with offline-first save and later upload.
+Project purpose: offline iPad flight communication/cruise-check recorder prepared for App Store submission.
 
 ## Current Version
 
-Current app version: v53.
+Current app version: v62.
 
-Current URLs:
-- Local: http://127.0.0.1:8765/?v=53
-- Public: https://flight.tuomakazusa.online/?v=53
+Current local preview URLs:
+- Local: http://127.0.0.1:8765/?v=62
+- Local-only preview: http://127.0.0.1:8765/?local=1
+
+Public-domain deployment is retired from the iPad App runtime plan. The iPad App is local-only. App Store support/privacy pages may use GitHub Pages or the user's domain, but only as public static pages and not as an app backend/runtime dependency.
 
 Main project path:
 - /Users/xiazhiyuan/Documents/Codex/fljght_recorder
@@ -26,6 +28,20 @@ Main files:
 - restored_webarchive/icon-512.png
 - deployment/flight_log_server.py
 - deployment/publish.sh
+- capacitor.config.json
+- ios/App/App.xcodeproj
+- APP_STORE_RELEASE.md
+- app-store/app-icon-ios.svg
+- app-store/metadata.zh-CN.md
+- app-store/connect-fields.zh-CN.md
+- app-store/submission-form-checklist.zh-CN.md
+- app-store/privacy-policy.zh-CN.html
+- app-store/support.zh-CN.html
+- app-store/static-site/
+- app-store/device-test-checklist.zh-CN.md
+- app-store/demo-records.json
+- app-store/screenshot-capture-guide.zh-CN.md
+- scripts/verify_app_store_ready.sh
 
 ## Runtime Deployment
 
@@ -41,6 +57,15 @@ Operational commands:
 - Publish frontend: `deployment/publish.sh`
 - Restart server after backend changes: `launchctl kickstart -k gui/501/com.flightlog.web`
 - Use short-timeout curl checks to avoid long stalls.
+- App Store readiness check: `scripts/verify_app_store_ready.sh`
+- App Store readiness check with Capacitor sync: `scripts/verify_app_store_ready.sh --sync`
+- App Store status summary: `npm run appstore:status`
+- iPad Air 5 test result check: `npm run appstore:verify-device-test`
+- Xcode archive metadata check: `npm run ios:verify-archive`
+- Signed archive metadata check before upload: `npm run ios:verify-archive:signed`
+- Latest signed Xcode Organizer archive check: `npm run ios:verify-archive:latest:signed`
+- Open iOS project after Xcode is ready: `npm run ios:open`
+- App Store support/privacy pages may be hosted on GitHub Pages or the user's domain. They must remain public static pages, not a login gate, sync endpoint, Cloudflare Access app, or runtime dependency for the iPad App.
 
 ## Implemented Behavior
 
@@ -56,6 +81,22 @@ Flight records:
 - Clicking Search filters by date and/or flight number only after the user explicitly searches.
 - Records are owner-isolated when Cloudflare Access user headers exist.
 - FN archive is shared across users.
+- v54 adds an iPad App/local-only mode for Capacitor, file://, and `?local=1`: records and custom FN entries are stored locally, server fetch/upload is skipped, and pending upload state is cleared.
+- Capacitor 8.4.0 iOS project exists under `ios/App`; Bundle ID is `com.xiazhiyuan.flightrecorder`, version `1.0`, build `1`, iPad-only, minimum iPadOS 15.0.
+- App privacy manifest `ios/App/App/PrivacyInfo.xcprivacy` declares no tracking and no collected data.
+- `ios/App/App/Info.plist` declares `ITSAppUsesNonExemptEncryption = false` for App Store export compliance.
+- Capacitor `CapacitorHttp` and `CapacitorCookies` bridge overrides are explicitly disabled in both root and iOS-bundled Capacitor config.
+- The iOS Cordova compatibility `config.xml` has no wildcard network access allowlist for the offline App Store build.
+- `scripts/verify_local_only_guards.mjs` checks that all `fetch()` calls in the web app are inside functions with a local-only path before network use.
+- iOS App Icon was replaced with the project flight-record icon, generated from `app-store/app-icon-ios.svg`; the Xcode asset is 1024x1024 RGB with no alpha.
+- Xcode can list the project, resolve packages, and complete a command-line Debug simulator build for the iPad-only app with `CODE_SIGNING_ALLOWED=NO`.
+- The app was installed and launched on the `iPad (A16)` simulator; screenshot saved at `app-store/ipad-simulator-launch.png`.
+- The app was installed and launched on the `iPad Air 11-inch (M4)` simulator as an iPad Air fifth-generation same-size check; v55 screenshot saved at `app-store/ipad-air-5-size-v55.png` with 1640x2360 pixels.
+- The app was installed and launched on the `iPad Pro 13-inch (M5)` simulator for App Store screenshot preparation; v55 screenshot saved at `app-store/ipad-13-inch-v55.png` with 2064x2752 pixels.
+- Screenshot demo data is stored in `app-store/demo-records.json`; import it through the app's backup import flow to create screenshots with fictional test data.
+- Xcode can complete a Release device build for the real iPad SDK with `CODE_SIGNING_ALLOWED=NO`; signing still needs the Apple Developer Team selected in Xcode before archive/upload.
+- Xcode can also create an unsigned archive at `build/Archives/FlightRecorder-v1.0-b1.xcarchive`; `npm run ios:verify-archive` confirms it has Bundle ID `com.xiazhiyuan.flightrecorder`, version `1.0`, build `1`, arm64, iPad-only, no collected data, and no native HTTP/Cookies bridge. This archive is only a local preflight artifact and cannot be uploaded without Apple Developer signing.
+- Apple Developer Team `G6G6AGF8SA` is now written into the Xcode project. A signed Release build with `-allowProvisioningUpdates` reached provisioning, then failed because the team has no registered devices/profiles for `com.xiazhiyuan.flightrecorder`; connect and trust the iPad Air 5 so Xcode can register it.
 
 UI and input:
 - Quick input buttons currently include RCD, HSO, HD, RP, DR, climb, descend, left/right turn, RWY, P/S, L/U, T/O, L/D, QNH.
@@ -66,6 +107,15 @@ UI and input:
 - v51 keeps the numeric keyboard mode active across continuous input after numeric quick keys instead of switching back to text after the first digit.
 - v52 changed FN normalization target length from 7 to 8 total characters.
 - v53 restricts FN to digits only; normalization strips non-digits, keeps the last 8 digits, and pads with leading zeros to 8 digits.
+- v54 switches Capacitor/iPad App usage to local-only persistence so the app can run independently offline.
+- v55 tightens the top-bar minimum columns for the iPad Air fifth-generation 10.9-inch size so the date and theme button are not clipped in portrait.
+- v56 makes the service worker local-only/cache-only so the packaged iPad App does not use network fallback for app shell assets.
+- v57 adds `?smoke=1` browser test mode so automated local-only UI smoke tests can save records without blocking on alert dialogs; local-only/Capacitor mode skips service worker registration and unregisters old registrations when possible so the iPad App is not controlled by stale web caches.
+- v58 removes duplicate WebView safe-area padding that caused visible outer margins on iPad and changes the cruise-check panel to an independently scrolling right column so the three cruise records are not clipped into equal-height compressed cards.
+- v59 drives the app shell height from `visualViewport.height` with repeated startup refreshes, fixing the first-open iPad WebView bottom white overlay that disappeared only after resizing.
+- v60 changes cruise-check records from 3 to 4, keeps the right-side check column scrollable, and removes the oversized fixed card height so landscape rows do not leave large blank areas under each record.
+- v61 keeps the app shell at a stable full-screen height when the iPad keyboard opens, while the quick phrase dock still follows VisualViewport above the keyboard. Record folder rows now have a red Delete button before Load with a confirmation dialog; local deletion also clears matching pending records.
+- v62 hides the quick phrase dock automatically when the iPad software keyboard is dismissed, while retaining enough active note state for the dock to reappear when the keyboard opens again.
 - Native keyboard behavior was restored after forced uppercase/digital keyboard bugs.
 - Record folder layout was adjusted multiple times: narrower dialog, separated controls, search beside flight number under Close row.
 - Top bar was adjusted: captain name input is about five Chinese characters wide, FN keeps more width, top row columns are more balanced.
