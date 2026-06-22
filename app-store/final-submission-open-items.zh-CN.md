@@ -28,7 +28,7 @@ npm run appstore:verify-device-test
 | 公开支持邮箱 | zhiyuan_1996@outlook.com | `app-store/static-site/support.html`、`app-store/static-site/privacy.html`、App Store Connect 审核联系方式 |
 | Support URL | https://xyan96.github.io/flight_recorder/support.html | `app-store/connect-fields.zh-CN.md`、`app-store/metadata.zh-CN.md`、App Store Connect |
 | Privacy Policy URL | https://xyan96.github.io/flight_recorder/privacy.html | `app-store/connect-fields.zh-CN.md`、`app-store/metadata.zh-CN.md`、App Store Connect |
-| 静态页面托管位置 | GitHub Pages: https://xyan96.github.io/flight_recorder/ | 可使用 GitHub Pages 或你的域名；只托管公开支持/隐私静态页，不作为 App 后端 |
+| 静态页面托管位置 | GitHub Pages: https://xyan96.github.io/flight_recorder/ | 已启用当前公开 GitHub 仓库的 Pages，发布源为 `main` / `docs`；只托管公开支持/隐私静态页，不作为 App 后端 |
 
 ## 商店发布
 
@@ -74,4 +74,4 @@ npm run appstore:verify-device-test
 npm run check:appstore:strict
 ```
 
-严格检查通过后，说明提交资料中的待定项已经替换完成；仍需以 App Store Connect 页面当前显示为准做最后确认。
+严格检查通过后，说明提交资料中的待定项已经替换完成。GitHub Pages 公开 URL 已验证可访问；仍需以 App Store Connect 页面当前显示为准做最后确认。

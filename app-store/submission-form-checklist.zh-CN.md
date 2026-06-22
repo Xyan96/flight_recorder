@@ -112,4 +112,4 @@ ITSAppUsesNonExemptEncryption = false
 - 上架国家和地区：中国大陆和美国
 - App 本体离线运行，不提供互联网信息服务，运行本体无需 ICP/APP 备案
 - 真机 iPad Air 第五代测试已通过
-- GitHub Pages 发布后，确认以上 Support URL 和 Privacy Policy URL 可公网访问
+- GitHub Pages 已发布并验证可公网访问：Support URL 与 Privacy Policy URL 均返回 HTTP 200（2026-06-22）

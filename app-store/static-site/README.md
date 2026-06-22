@@ -2,7 +2,7 @@
 
 这个目录和仓库根目录下的 `docs/` 用于托管 App Store Connect 需要的公开支持页和隐私政策页。网页只用于 App Store 审核和商店展示，不属于 iPad App 本体，也不作为 App 后端服务。
 
-当前计划使用 GitHub Pages：
+当前已使用 GitHub Pages，发布源为 `main` / `docs`：
 
 ```text
 https://xyan96.github.io/flight_recorder/
@@ -10,7 +10,7 @@ https://xyan96.github.io/flight_recorder/support.html
 https://xyan96.github.io/flight_recorder/privacy.html
 ```
 
-发布源建议：GitHub Pages -> Deploy from a branch -> `main` / `docs`。
+发布状态：2026-06-22 已启用并验证 `support.html` 与 `privacy.html` 均返回 HTTP 200。
 
 页面内容为中英双语：
 

@@ -258,7 +258,7 @@ Important wording: flight records are saved on the user's iPad and are not trans
 
 App Store Connect still requires publicly accessible Support and Privacy Policy URLs. Because this app is a pure local/offline tool, these pages are only for review and store display; they are not part of the App runtime and must not point to a login gate or backend dependency.
 
-The public support/privacy site is prepared under `docs/` for GitHub Pages. These pages are only for App Store listing/review; the iPad App itself remains offline and has no runtime domain dependency.
+The public support/privacy site is live on GitHub Pages from `main` / `docs`. These pages are only for App Store listing/review; the iPad App itself remains offline and has no runtime domain dependency.
 
 Final URL values:
 
@@ -272,7 +272,7 @@ docs/
 app-store/static-site/
 ```
 
-Public support email: zhiyuan_1996@outlook.com. Review contact: 夏志远 / +86 19934558747 / zhiyuan_1996@outlook.com.
+Public support email: zhiyuan_1996@outlook.com. Review contact: 夏志远 / +86 19934558747 / zhiyuan_1996@outlook.com. GitHub Pages was verified live on 2026-06-22 with HTTP 200 for both support and privacy URLs.
 
 ## Export Compliance
 

@@ -57,8 +57,8 @@ This app is a local offline utility and does not provide an internet information
 - 对中国大陆区域，不要把普通支持网页描述成 App 服务端。支持/隐私 URL 是商店展示资料，App 本体仍应表述为离线本地工具。
 - 截图和测试记录使用虚构数据，避免真实航班运行、个人或敏感数据。
 
-## 仍需最终外部确认
+## 外部确认状态
 
-- GitHub Pages 是否已启用并可公网访问
-- App Store Connect 页面中的开发者显示名称是否与账号当前显示一致
+- GitHub Pages 已启用并可公网访问：Support URL 与 Privacy Policy URL 均返回 HTTP 200（2026-06-22）
+- 仍需在 App Store Connect 页面中确认开发者显示名称是否与账号当前显示一致
 

@@ -96,6 +96,8 @@ npm run check:appstore:strict
 
 ## GitHub Pages 支持页
 
+已启用当前公开仓库的 GitHub Pages，发布源为 `main` / `docs`。2026-06-22 已验证以下 URL 均公网可访问并返回 HTTP 200：
+
 - https://xyan96.github.io/flight_recorder/support.html
 - https://xyan96.github.io/flight_recorder/privacy.html
 
