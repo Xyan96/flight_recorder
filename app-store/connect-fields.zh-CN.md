@@ -1,6 +1,6 @@
 # App Store Connect 填写字段
 
-这份文件用于在 App Store Connect 页面中复制粘贴。带有 `待定` 的项目必须在提交审核前替换为最终信息。
+这份文件用于在 App Store Connect 页面中复制粘贴。当前已按中国大陆和美国区域、免费价格、GitHub Pages 公开网页和本人审核联系方式更新。
 
 ## App 信息
 
@@ -16,13 +16,14 @@
 | 年龄分级 | 建议 4+ |
 | 内容权利 | 不包含第三方受版权保护内容 |
 | 面向儿童 | 否 |
+| 开发者显示名称 | 夏志远 |
 
 ## 价格与可用范围
 
 | 字段 | 内容 |
 | --- | --- |
-| 价格 | 待定 |
-| 上架国家和地区 | 待定 |
+| 价格 | 免费 |
+| 上架国家和地区 | 中国大陆和美国 |
 
 ## App Store 展示信息
 
@@ -31,8 +32,8 @@
 | 副标题 | 离线飞行联络与巡航检查记录 |
 | 宣传文本 | 离线保存飞行联络与巡航检查记录，iPad 打开即可使用。 |
 | 关键词 | 飞行,飞行记录,巡航检查,飞行联络,航班,UTC,机组,燃油,离线,iPad |
-| 支持 URL | 待定，使用公开静态页面的 `support.html`，GitHub Pages 或你的域名均可 |
-| 隐私政策 URL | 待定，使用公开静态页面的 `privacy.html`，GitHub Pages 或你的域名均可 |
+| 支持 URL | https://xyan96.github.io/flight_recorder/support.html |
+| 隐私政策 URL | https://xyan96.github.io/flight_recorder/privacy.html |
 
 ## 描述
 
@@ -68,7 +69,22 @@
 4. 打开“记录夹”。
 5. 点击“载入”，确认刚保存的记录可以恢复到主界面。
 
-App 的记录保存在用户 iPad 本地，不需要后端服务、Cloudflare 登录、订阅、广告或第三方分析 SDK。
+App 的记录保存在用户 iPad 本地，不需要后端服务、运行域名、Cloudflare 登录、订阅、广告或第三方分析 SDK。App 本体不提供互联网信息服务，不包含账号系统、同步服务、内容发布、用户生成内容平台、即时通信、论坛、新闻、支付或远程数据服务；因此 App 运行本体没有需要 ICP/APP 备案的互联网服务。GitHub Pages 仅用于 App Store 要求的公开支持页面和隐私政策页面，不是 App 功能或运行依赖。
+```
+
+## English Review Notes
+
+```text
+This is an offline iPad flight communication and cruise-check recorder. No account is required.
+
+To review:
+1. Launch the app.
+2. Fill aircraft number, flight number, route, captain, and date.
+3. Tap 保存.
+4. Open 记录夹.
+5. Tap 载入 to reload the saved record.
+
+The app stores records locally on the iPad. It does not require a backend service, runtime domain, Cloudflare login, subscription, advertising, or third-party analytics SDK. The app itself does not provide an internet information service and has no account system, sync service, content publishing, user-generated-content platform, messaging, forum, news, payment, or remote data service. Therefore the app runtime has no internet service that requires ICP/app filing. GitHub Pages is used only for the public support and privacy-policy pages required by App Store listing; it is not part of the app functionality or runtime dependency.
 ```
 
 ## App 隐私
@@ -121,13 +137,13 @@ app-store/submission-form-checklist.zh-CN.md
 
 正式截图建议导入 `app-store/demo-records.json`，并按 `app-store/screenshot-capture-guide.zh-CN.md` 生成带虚构测试数据的截图。
 
-## 提交前必须替换
+## 提交前已确认
 
-- 公开支持邮箱
-- 支持 URL
-- 隐私政策 URL
-- 价格
-- 上架国家和地区
-- 开发者显示名称
-- 审核联系人姓名、电话、邮箱
-- 真机 iPad Air 第五代测试结果
+- 公开支持邮箱：zhiyuan_1996@outlook.com
+- 支持 URL：https://xyan96.github.io/flight_recorder/support.html
+- 隐私政策 URL：https://xyan96.github.io/flight_recorder/privacy.html
+- 价格：免费
+- 上架国家和地区：中国大陆和美国
+- 开发者显示名称：夏志远
+- 审核联系人姓名、电话、邮箱：夏志远 / +86 19934558747 / zhiyuan_1996@outlook.com
+- 真机 iPad Air 第五代测试结果：已通过，2026-06-22，iPad Air 第五代，Xcode Run 成功

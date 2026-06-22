@@ -258,22 +258,21 @@ Important wording: flight records are saved on the user's iPad and are not trans
 
 App Store Connect still requires publicly accessible Support and Privacy Policy URLs. Because this app is a pure local/offline tool, these pages are only for review and store display; they are not part of the App runtime and must not point to a login gate or backend dependency.
 
-You can host `app-store/static-site/` on GitHub Pages or on your own domain. If you use your domain, keep it to plain static pages such as `/flight-recorder/support.html` and `/flight-recorder/privacy.html`; the iPad App itself still has no domain dependency.
+The public support/privacy site is prepared under `docs/` for GitHub Pages. These pages are only for App Store listing/review; the iPad App itself remains offline and has no runtime domain dependency.
 
-Example URL shapes:
+Final URL values:
 
-- Support URL: `https://<github-username>.github.io/flight-recorder/support.html`
-- Privacy Policy URL: `https://<github-username>.github.io/flight-recorder/privacy.html`
-- Or: `https://<your-domain>/flight-recorder/support.html`
-- Or: `https://<your-domain>/flight-recorder/privacy.html`
+- Support URL: `https://xyan96.github.io/flight_recorder/support.html`
+- Privacy Policy URL: `https://xyan96.github.io/flight_recorder/privacy.html`
 
 Static site source:
 
 ```text
+docs/
 app-store/static-site/
 ```
 
-The support email is intentionally not filled in yet; confirm the public address before App Store Connect submission.
+Public support email: zhiyuan_1996@outlook.com. Review contact: 夏志远 / +86 19934558747 / zhiyuan_1996@outlook.com.
 
 ## Export Compliance
 
@@ -301,7 +300,7 @@ To review:
 4. Open 记录夹.
 5. Tap 载入 to reload the saved record.
 
-The app stores records locally on the iPad. It does not require a backend service, login, subscription, analytics, or third-party advertising.
+The app stores records locally on the iPad. It does not require a backend service, runtime domain, Cloudflare login, subscription, advertising, or third-party analytics SDK. The app itself does not provide an internet information service and has no account system, sync service, content publishing, user-generated-content platform, messaging, forum, news, payment, or remote data service. Therefore the app runtime has no internet service that requires ICP/app filing. GitHub Pages is used only for the public support and privacy-policy pages required by App Store listing; it is not part of the app functionality or runtime dependency.
 ```
 
 ## Screenshots Needed

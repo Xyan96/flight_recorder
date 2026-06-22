@@ -10,7 +10,8 @@
 - SKU：`flight-recorder-ios`
 - 类别建议：效率
 - 年龄分级建议：4+
-- 价格建议：免费或付费一次买断
+- 价格：免费
+- 开发者显示名称：夏志远
 
 ## 描述
 
@@ -41,44 +42,21 @@
 
 ## 支持 URL
 
-待定。可以使用 GitHub Pages、App Store 专用静态站点，或你的域名。无论托管在哪里，这个 URL 只用于 App Store 审核和商店展示，应当是公开静态页面，不作为 App 后端或登录入口。
-
-示例格式：
-
 ```text
-https://<github-username>.github.io/flight-recorder/support.html
-https://<your-domain>/flight-recorder/support.html
+https://xyan96.github.io/flight_recorder/support.html
 ```
 
-仓库里已有源文件：
+公开支持邮箱：zhiyuan_1996@outlook.com
 
-```text
-app-store/static-site/support.html
-```
-
-可以使用一个简单网页，内容包含：
-
-- App 名称
-- 支持邮箱
-- 常见问题
-- 隐私政策链接
+静态页面托管位置：GitHub Pages: https://xyan96.github.io/flight_recorder/
 
 ## 隐私政策 URL
 
-待定。建议与支持页放在同一个静态托管位置，可以是 GitHub Pages，也可以是你的域名。
-
-示例格式：
-
 ```text
-https://<github-username>.github.io/flight-recorder/privacy.html
-https://<your-domain>/flight-recorder/privacy.html
+https://xyan96.github.io/flight_recorder/privacy.html
 ```
 
-仓库里已有源文件：
-
-```text
-app-store/static-site/privacy.html
-```
+与支持页放在同一套公开静态托管页面中。
 
 ## 审核备注
 
@@ -92,7 +70,22 @@ app-store/static-site/privacy.html
 4. 打开“记录夹”。
 5. 点击“载入”，确认刚保存的记录可以恢复到主界面。
 
-App 的记录保存在用户 iPad 本地，不需要后端服务、Cloudflare 登录、订阅、广告或第三方分析 SDK。
+App 的记录保存在用户 iPad 本地，不需要后端服务、运行域名、Cloudflare 登录、订阅、广告或第三方分析 SDK。App 本体不提供互联网信息服务，不包含账号系统、同步服务、内容发布、用户生成内容平台、即时通信、论坛、新闻、支付或远程数据服务；因此 App 运行本体没有需要 ICP/APP 备案的互联网服务。GitHub Pages 仅用于 App Store 要求的公开支持页面和隐私政策页面，不是 App 功能或运行依赖。
+```
+
+## English Review Notes
+
+```text
+This is an offline iPad flight communication and cruise-check recorder. No account is required.
+
+To review:
+1. Launch the app.
+2. Fill aircraft number, flight number, route, captain, and date.
+3. Tap 保存.
+4. Open 记录夹.
+5. Tap 载入 to reload the saved record.
+
+The app stores records locally on the iPad. It does not require a backend service, runtime domain, Cloudflare login, subscription, advertising, or third-party analytics SDK. The app itself does not provide an internet information service and has no account system, sync service, content publishing, user-generated-content platform, messaging, forum, news, payment, or remote data service. Therefore the app runtime has no internet service that requires ICP/app filing. GitHub Pages is used only for the public support and privacy-policy pages required by App Store listing; it is not part of the app functionality or runtime dependency.
 ```
 
 ## App 隐私填写建议
@@ -132,12 +125,13 @@ App 的记录保存在用户 iPad 本地，不需要后端服务、Cloudflare �
 - 虚构演示备份：`app-store/demo-records.json`
 - 截图生成指南：`app-store/screenshot-capture-guide.zh-CN.md`
 
-## 提交前必填占位
+## 提交前确认
 
-- 公开支持邮箱
-- 选择可公网访问的静态托管位置，GitHub Pages 或你的域名均可
-- 确认支持 URL 已发布并可公网访问
-- 确认隐私政策 URL 已发布并可公网访问
-- 开发者显示名称
-- 是否免费/付费
-- 上架国家和地区
+- 公开支持邮箱：zhiyuan_1996@outlook.com
+- 支持 URL：https://xyan96.github.io/flight_recorder/support.html
+- 隐私政策 URL：https://xyan96.github.io/flight_recorder/privacy.html
+- 静态页面托管位置：GitHub Pages: https://xyan96.github.io/flight_recorder/
+- 开发者显示名称：夏志远
+- 价格：免费
+- 上架国家和地区：中国大陆和美国
+- iPad Air 第五代真机测试：已通过，2026-06-22，iPad Air 第五代，Xcode Run 成功

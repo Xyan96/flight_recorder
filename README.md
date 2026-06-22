@@ -93,3 +93,10 @@ npm run ios:verify-archive:latest:signed
 npm run appstore:verify-device-test
 npm run check:appstore:strict
 ```
+
+## GitHub Pages 支持页
+
+- https://xyan96.github.io/flight_recorder/support.html
+- https://xyan96.github.io/flight_recorder/privacy.html
+
+这些网页只用于 App Store 审核和商店展示，不是 App 运行依赖。App 本体离线运行，不提供互联网信息服务，运行本体无需 ICP/APP 备案。

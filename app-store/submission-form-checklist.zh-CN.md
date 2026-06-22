@@ -39,8 +39,8 @@
 
 | 字段 | 状态 |
 | --- | --- |
-| 价格 | 待定 |
-| 上架国家和地区 | 待定 |
+| 价格 | 免费 |
+| 上架国家和地区 | 中国大陆和美国 |
 | 是否提供 App 内购买 | 否 |
 | 是否提供订阅 | 否 |
 
@@ -89,9 +89,9 @@ ITSAppUsesNonExemptEncryption = false
 | 字段 | 建议填写 |
 | --- | --- |
 | 登录账号 | 不需要账号 |
-| 联系人姓名 | 待定 |
-| 联系电话 | 待定 |
-| 联系邮箱 | 待定 |
+| 联系人姓名 | 夏志远 |
+| 联系电话 | +86 19934558747 |
+| 联系邮箱 | zhiyuan_1996@outlook.com |
 | 审核备注 | 使用 `app-store/connect-fields.zh-CN.md` 中的审核备注 |
 
 审核备注重点：
@@ -102,13 +102,14 @@ ITSAppUsesNonExemptEncryption = false
 - 记录保存在 iPad 本地。
 - 审核人员可直接填写测试数据、保存、打开记录夹并载入。
 
-## 提交前必须确定
+## 提交前确认
 
-- 公开支持邮箱
-- Support URL
-- Privacy Policy URL
-- 审核联系人姓名、电话、邮箱
-- 价格
-- 上架国家和地区
-- 是否免费或付费
-- 真机 iPad Air 第五代测试是否通过
+- 公开支持邮箱：zhiyuan_1996@outlook.com
+- Support URL：https://xyan96.github.io/flight_recorder/support.html
+- Privacy Policy URL：https://xyan96.github.io/flight_recorder/privacy.html
+- 审核联系人姓名、电话、邮箱：夏志远 / +86 19934558747 / zhiyuan_1996@outlook.com
+- 价格：免费
+- 上架国家和地区：中国大陆和美国
+- App 本体离线运行，不提供互联网信息服务，运行本体无需 ICP/APP 备案
+- 真机 iPad Air 第五代测试已通过
+- GitHub Pages 发布后，确认以上 Support URL 和 Privacy Policy URL 可公网访问

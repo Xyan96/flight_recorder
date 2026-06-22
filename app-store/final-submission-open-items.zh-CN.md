@@ -25,31 +25,31 @@ npm run appstore:verify-device-test
 
 | 项目 | 当前状态 | 填写位置 |
 | --- | --- | --- |
-| 公开支持邮箱 | 待定 | `app-store/static-site/support.html`、`app-store/static-site/privacy.html`、App Store Connect 审核联系方式 |
-| Support URL | 待定 | `app-store/connect-fields.zh-CN.md`、`app-store/metadata.zh-CN.md`、App Store Connect |
-| Privacy Policy URL | 待定 | `app-store/connect-fields.zh-CN.md`、`app-store/metadata.zh-CN.md`、App Store Connect |
-| 静态页面托管位置 | 待定 | 可使用 GitHub Pages 或你的域名；只托管公开支持/隐私静态页，不作为 App 后端 |
+| 公开支持邮箱 | zhiyuan_1996@outlook.com | `app-store/static-site/support.html`、`app-store/static-site/privacy.html`、App Store Connect 审核联系方式 |
+| Support URL | https://xyan96.github.io/flight_recorder/support.html | `app-store/connect-fields.zh-CN.md`、`app-store/metadata.zh-CN.md`、App Store Connect |
+| Privacy Policy URL | https://xyan96.github.io/flight_recorder/privacy.html | `app-store/connect-fields.zh-CN.md`、`app-store/metadata.zh-CN.md`、App Store Connect |
+| 静态页面托管位置 | GitHub Pages: https://xyan96.github.io/flight_recorder/ | 可使用 GitHub Pages 或你的域名；只托管公开支持/隐私静态页，不作为 App 后端 |
 
 ## 商店发布
 
 | 项目 | 当前状态 | 填写位置 |
 | --- | --- | --- |
-| 价格 | 待定 | App Store Connect 价格与可用范围 |
-| 上架国家和地区 | 待定 | App Store Connect 价格与可用范围 |
-| 开发者显示名称 | 待定 | App Store Connect 元数据确认 |
-| 审核联系人姓名 | 待定 | App Store Connect 审核信息 |
-| 审核联系电话 | 待定 | App Store Connect 审核信息 |
-| 审核联系邮箱 | 待定 | App Store Connect 审核信息 |
+| 价格 | 免费 | App Store Connect 价格与可用范围 |
+| 上架国家和地区 | 中国大陆和美国 | App Store Connect 价格与可用范围 |
+| 开发者显示名称 | 夏志远 | App Store Connect 元数据确认 |
+| 审核联系人姓名 | 夏志远 | App Store Connect 审核信息 |
+| 审核联系电话 | +86 19934558747 | App Store Connect 审核信息 |
+| 审核联系邮箱 | zhiyuan_1996@outlook.com | App Store Connect 审核信息 |
 
 ## 真机验证
 
 | 项目 | 当前状态 | 证据 |
 | --- | --- | --- |
-| iPad Air 第五代真机安装 | 待定 | Xcode Run 成功 |
-| 飞行模式离线保存 | 待定 | `app-store/device-test-checklist.zh-CN.md` |
-| 记录夹载入 | 待定 | `app-store/device-test-checklist.zh-CN.md` |
-| 备份导出/导入 | 待定 | `app-store/device-test-checklist.zh-CN.md` |
-| 截图是否使用虚构测试数据 | 待定 | `app-store/screenshot-capture-guide.zh-CN.md` |
+| iPad Air 第五代真机安装 | 已通过，2026-06-22，iPad Air 第五代，Xcode Run 成功 | Xcode Run 成功 |
+| 飞行模式离线保存 | 已通过，飞行模式下可离线保存，App 本体不需要网络 | `app-store/device-test-checklist.zh-CN.md` |
+| 记录夹载入 | 已通过，记录夹可载入刚保存的本地记录 | `app-store/device-test-checklist.zh-CN.md` |
+| 备份导出/导入 | 已通过，备份可导出并重新导入 | `app-store/device-test-checklist.zh-CN.md` |
+| 截图是否使用虚构测试数据 | 已通过，截图只使用虚构测试数据 | `app-store/screenshot-capture-guide.zh-CN.md` |
 
 严格提交检查还会要求本机存在并通过 `app-store/device-test-results.json`。
 

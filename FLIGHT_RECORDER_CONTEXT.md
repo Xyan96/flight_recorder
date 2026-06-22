@@ -12,7 +12,7 @@ Current local preview URLs:
 - Local: http://127.0.0.1:8765/?v=64
 - Local-only preview: http://127.0.0.1:8765/?local=1
 
-Public-domain deployment is retired from the iPad App runtime plan. The iPad App is local-only. App Store support/privacy pages may use GitHub Pages or the user's domain, but only as public static pages and not as an app backend/runtime dependency.
+Public-domain deployment is retired from the iPad App runtime plan. The iPad App is local-only. App Store support/privacy pages use GitHub Pages, but only as public static pages and not as an app backend/runtime dependency. Target App Store regions: Mainland China and United States. The app runtime is offline, does not provide an internet information service, and should be described as having no ICP/app filing requirement for the app runtime.
 
 Main project path:
 - /Users/xiazhiyuan/Documents/Codex/Flight
