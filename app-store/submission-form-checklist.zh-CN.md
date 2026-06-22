@@ -10,7 +10,7 @@
 | 名称 | 飞行记录 |
 | 主要语言 | 简体中文 |
 | Bundle ID | com.xiazhiyuan.flightrecorder |
-| SKU | fljght-recorder-ios |
+| SKU | flight-recorder-ios |
 | 用户访问权限 | Full Access |
 
 ## App 信息

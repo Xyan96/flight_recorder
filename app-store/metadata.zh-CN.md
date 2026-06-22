@@ -7,7 +7,7 @@
 - App 名称：飞行记录
 - 副标题：离线飞行联络与巡航检查记录
 - Bundle ID：`com.xiazhiyuan.flightrecorder`
-- SKU：`fljght-recorder-ios`
+- SKU：`flight-recorder-ios`
 - 类别建议：效率
 - 年龄分级建议：4+
 - 价格建议：免费或付费一次买断

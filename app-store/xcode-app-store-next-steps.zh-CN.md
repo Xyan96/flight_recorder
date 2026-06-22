@@ -48,7 +48,7 @@ npm run ios:build:device:signed
 - Name：飞行记录
 - Primary language：简体中文
 - Bundle ID：`com.xiazhiyuan.flightrecorder`
-- SKU：`fljght-recorder-ios`
+- SKU：`flight-recorder-ios`
 
 如果 App Store Connect 里还没有这个 Bundle ID，先在 Apple Developer 账号的 Identifiers 中创建 App ID，或让 Xcode 自动签名流程创建后再回到 App Store Connect 选择。
 

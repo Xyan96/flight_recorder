@@ -1,5 +1,5 @@
 {
-  "name": "fljght-recorder",
+  "name": "flight-recorder",
   "version": "1.0.0",
   "private": true,
   "description": "Offline-first iPad flight communication and cruise-check recorder.",

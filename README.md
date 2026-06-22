@@ -1,4 +1,4 @@
-# fljght_recorder
+# flight_recorder
 
 飞行联络与巡航检查记录本地 Web 应用，并已准备为离线 iPad App。
 
@@ -8,7 +8,7 @@
 - `deployment/`: 旧本机服务和 Tunnel 配置模板；离线 iPad App 不使用这些部署文件。
 - `ios/App/`: Capacitor 生成的 iPad App 工程。
 - `app-store/`: App Store 上架资料、截图和静态支持/隐私页面源文件。
-- `FLJGHT_RECORDER_CONTEXT.md`: 项目恢复和部署背景记录。
+- `FLIGHT_RECORDER_CONTEXT.md`: 项目恢复和部署背景记录。
 
 ## 当前版本
 

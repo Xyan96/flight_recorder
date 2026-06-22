@@ -1,4 +1,4 @@
-# fljght_recorder context
+# flight_recorder context
 
 Last updated: 2026-06-12 Asia/Shanghai.
 
@@ -16,6 +16,8 @@ Public-domain deployment is retired from the iPad App runtime plan. The iPad App
 
 Main project path:
 - /Users/xiazhiyuan/Documents/Codex/fljght_recorder
+
+Note: the current local folder still uses the original misspelled path. Public identifiers and App Store metadata should use `flight`, not `fljght`. Rename the local folder only from outside this active workspace.
 
 Main files:
 - restored_webarchive/index.html
@@ -159,7 +161,8 @@ Tag:
 
 GitHub:
 - GitHub user seen through connector: Xyan96
-- `Xyan96/fljght_recorder` did not exist when checked.
+- Preferred corrected repository name: `Xyan96/flight_recorder`.
+- Current origin may still point at the legacy misspelled repository URL until the GitHub repository is renamed.
 - GitHub CLI `gh` was installed, but not logged in.
 - User said they cannot log into browser now and will add GitHub later.
 
@@ -168,7 +171,7 @@ When ready to create and push to GitHub:
 ```sh
 cd /Users/xiazhiyuan/Documents/Codex/fljght_recorder
 gh auth login
-gh repo create Xyan96/fljght_recorder --private --source=. --remote=origin --push
+gh repo create Xyan96/flight_recorder --private --source=. --remote=origin --push
 git tag v53
 git push origin main
 git push origin v53
@@ -178,7 +181,7 @@ If the empty GitHub repo is created manually first:
 
 ```sh
 cd /Users/xiazhiyuan/Documents/Codex/fljght_recorder
-git remote add origin https://github.com/Xyan96/fljght_recorder.git
+git remote add origin https://github.com/Xyan96/flight_recorder.git
 git push -u origin main
 git tag v53
 git push origin v53
@@ -192,7 +195,7 @@ Release checklist:
 
 ## Notes For Future Recovery
 
-- Do not trust the old project path `/Users/xiazhiyuan/Documents/Codex/2026-05-17/files-mentioned-by-the-user-backup` as the active project. The active project is `fljght_recorder`.
+- Do not trust the old project path `/Users/xiazhiyuan/Documents/Codex/2026-05-17/files-mentioned-by-the-user-backup` as the active project. The active project is `flight_recorder`; the current folder may still have the legacy spelling until it is renamed outside this active workspace.
 - `deployment/publish.sh` was fixed to publish from `/Users/xiazhiyuan/Documents/Codex/fljght_recorder/restored_webarchive/`.
 - Do not delete or overwrite `/Users/xiazhiyuan/.flight-log-data/records` unless explicitly asked.
 - Avoid long-running broad filesystem searches; the user prefers short checks and regular status updates.

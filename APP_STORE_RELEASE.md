@@ -181,7 +181,7 @@ Create a new app record before uploading the first archive:
 - Name: 飞行记录
 - Primary language: Simplified Chinese
 - Bundle ID: `com.xiazhiyuan.flightrecorder`
-- SKU: `fljght-recorder-ios`
+- SKU: `flight-recorder-ios`
 - User access: Full Access unless you need to limit team members
 
 Before creating the app record, the Account Holder must have signed the latest agreements in App Store Connect.

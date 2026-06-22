@@ -59,7 +59,7 @@ npm run appstore:verify-device-test
 | --- | --- |
 | App 名称 | 飞行记录 |
 | Bundle ID | `com.xiazhiyuan.flightrecorder` |
-| SKU | `fljght-recorder-ios` |
+| SKU | `flight-recorder-ios` |
 | 平台 | iOS / iPad only |
 | 版本 | `1.0` |
 | 构建号 | `1` |
