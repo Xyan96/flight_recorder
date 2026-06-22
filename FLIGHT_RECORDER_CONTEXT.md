@@ -67,7 +67,7 @@ Operational commands:
 - Signed archive metadata check before upload: `npm run ios:verify-archive:signed`
 - Latest signed Xcode Organizer archive check: `npm run ios:verify-archive:latest:signed`
 - Open iOS project after Xcode is ready: `npm run ios:open`
-- App Store support/privacy pages may be hosted on GitHub Pages or the user's domain. They must remain public static pages, not a login gate, sync endpoint, Cloudflare Access app, or runtime dependency for the iPad App.
+- App Store support/privacy pages are live on GitHub Pages from the public `Xyan96/flight_recorder` repository, branch `main`, path `/docs`. They must remain public static pages, not a login gate, sync endpoint, Cloudflare Access app, or runtime dependency for the iPad App.
 
 ## Implemented Behavior
 

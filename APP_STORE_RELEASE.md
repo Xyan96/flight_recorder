@@ -2,6 +2,8 @@
 
 This checklist tracks the path from the current offline iPad build to App Store submission.
 
+Final App Store Connect copy/paste and submission runbook: `app-store/app-store-connect-final-submit.zh-CN.md`.
+
 ## Current App Build
 
 - App name: 飞行记录

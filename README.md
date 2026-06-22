@@ -62,6 +62,12 @@ npm run check:appstore
 npm run appstore:status
 ```
 
+最终提交 App Store Connect 时按这份步骤逐项填写：
+
+```text
+app-store/app-store-connect-final-submit.zh-CN.md
+```
+
 已有 `.xcarchive` 后可以检查归档元数据：
 
 ```sh

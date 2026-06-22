@@ -73,7 +73,7 @@ App 本体不使用域名、不需要后端。App Store Connect 仍要求公开�
 - `app-store/static-site/support.html`
 - `app-store/static-site/privacy.html`
 
-可以托管到 GitHub Pages，也可以托管到你的域名。使用你的域名时建议放在清晰的静态路径，例如 `/flight-recorder/support.html` 和 `/flight-recorder/privacy.html`，不要接入登录页、同步服务或 Cloudflare Access。提交前把页面里的公开支持邮箱替换为最终邮箱。
+当前已使用 GitHub Pages，发布源为公开仓库 `Xyan96/flight_recorder` 的 `main` / `docs`，并已验证 Support URL 与 Privacy Policy URL 均返回 HTTP 200。不要接入登录页、同步服务或 Cloudflare Access；这些网页只作为 App Store 公开支持/隐私页面，不是 App 后端。
 
 ## 5. 截图
 
