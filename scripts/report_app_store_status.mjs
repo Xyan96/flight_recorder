@@ -5,6 +5,8 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const ARCHIVE_PATH = path.join(ROOT, "build/Archives/FlightRecorder-v1.0-b1.xcarchive");
+const TEMP_SIGNED_ARCHIVE_PATH = "/private/tmp/FlightRecorder-v1.0-b1.xcarchive";
+const TEMP_EXPORT_IPA_PATH = "/private/tmp/FlightRecorder-export/App.ipa";
 const DEVICE_TEST_RESULTS_PATH = path.join(ROOT, "app-store/device-test-results.json");
 const EXPECTED_BUNDLE_ID = "com.xiazhiyuan.flightrecorder";
 const EXPECTED_VERSION = "1.0";
@@ -116,13 +118,37 @@ if (!devices.ok) {
   statusLine("OK", "Connected iPad/device list", compact);
 }
 
-if (fs.existsSync(ARCHIVE_PATH)) {
-  const archive = run("node", ["scripts/verify_xcode_archive.mjs"]);
-  statusLine(archive.ok ? "OK" : "TODO", "Unsigned archive preflight", archive.ok ? "metadata checks passed" : archive.stderr || archive.stdout);
-  const signedArchive = run("node", ["scripts/verify_xcode_archive.mjs", "--require-signed"]);
-  statusLine(signedArchive.ok ? "OK" : "TODO", "Signed archive for upload", signedArchive.ok ? "signed metadata checks passed" : "create signed archive in Xcode");
-} else {
+const archiveCandidates = [
+  { label: "project archive", path: ARCHIVE_PATH },
+  { label: "temporary signed archive", path: TEMP_SIGNED_ARCHIVE_PATH },
+].filter((candidate) => fs.existsSync(candidate.path));
+
+let signedArchiveOk = false;
+if (archiveCandidates.length === 0) {
   statusLine("TODO", "Archive", "run npm run ios:archive:unsigned or create signed archive in Xcode");
+} else {
+  const archive = run("node", ["scripts/verify_xcode_archive.mjs", archiveCandidates[0].path]);
+  statusLine(
+    archive.ok ? "OK" : "TODO",
+    "Archive preflight",
+    archive.ok ? `${archiveCandidates[0].label}: metadata checks passed` : archive.stderr || archive.stdout
+  );
+
+  const signedArchive = archiveCandidates
+    .map((candidate) => ({ candidate, result: run("node", ["scripts/verify_xcode_archive.mjs", "--require-signed", candidate.path]) }))
+    .find(({ result }) => result.ok);
+  signedArchiveOk = Boolean(signedArchive);
+  statusLine(
+    signedArchiveOk ? "OK" : "TODO",
+    "Signed archive preflight",
+    signedArchiveOk ? `${signedArchive.candidate.label}: signed metadata checks passed` : "create signed archive in Xcode"
+  );
+}
+
+if (fs.existsSync(TEMP_EXPORT_IPA_PATH)) {
+  statusLine("OK", "App Store Connect export preflight", TEMP_EXPORT_IPA_PATH);
+} else if (signedArchiveOk) {
+  statusLine("TODO", "App Store Connect export preflight", "export or upload the signed archive with Xcode Organizer");
 }
 
 const values = parseSubmissionValues();
@@ -154,4 +180,5 @@ if (teams.length === 0) console.log("- Select your Apple Developer Team in Xcode
 if (!devices.ok || /No devices found/i.test(devices.stdout)) console.log("- Confirm the iPad Air 5 is connected, unlocked, trusted, and visible in Xcode's device picker.");
 if (!fs.existsSync(DEVICE_TEST_RESULTS_PATH)) console.log("- After real iPad testing, copy app-store/device-test-results.example.json to app-store/device-test-results.json and mark passed checks true.");
 if (placeholders.length > 0) console.log("- Fill final support/privacy URL, email, price, regions, review contact, and device test statuses.");
+if (fs.existsSync(TEMP_EXPORT_IPA_PATH)) console.log("- Upload the verified App Store Connect export or use Xcode Organizer to upload/select build 1.0 (1).");
 console.log("- Run npm run check:appstore for local readiness, then npm run check:appstore:strict before final submission.");
