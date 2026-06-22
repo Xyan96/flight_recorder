@@ -50,8 +50,9 @@ npm run appstore:verify-device-test
 | 记录夹载入 | 已通过，记录夹可载入刚保存的本地记录 | `app-store/device-test-checklist.zh-CN.md` |
 | 备份导出/导入 | 已通过，备份可导出并重新导入 | `app-store/device-test-checklist.zh-CN.md` |
 | 截图是否使用虚构测试数据 | 已通过，截图只使用虚构测试数据 | `app-store/screenshot-capture-guide.zh-CN.md` |
-| 命令行签名归档预检 | 已通过，`/private/tmp/FlightRecorder-v1.0-b1.xcarchive` | `node scripts/verify_xcode_archive.mjs --require-signed /private/tmp/FlightRecorder-v1.0-b1.xcarchive` |
-| App Store Connect 本地导出预检 | 已通过，`/private/tmp/FlightRecorder-export/App.ipa` | `xcodebuild -exportArchive`，并已检查 IPA 内 Bundle ID、版本、iPad-only、隐私清单 |
+| 命令行签名归档预检 | 已通过，`/private/tmp/FlightRecorder-v1.0-b2.xcarchive` | `node scripts/verify_xcode_archive.mjs --require-signed /private/tmp/FlightRecorder-v1.0-b2.xcarchive` |
+| App Store Connect 本地导出预检 | 已通过，`/private/tmp/FlightRecorder-export-b2/App.ipa` | `xcodebuild -exportArchive`，并已检查 IPA 内 Bundle ID、版本、iPad-only、隐私清单 |
+| App Store Connect 上传 | 待完成；当前网络路径上传到 Apple object-storage 时出现 checksum mismatch | 换网络路径、关闭 VPN/流量过滤工具，或使用 Apple Transporter/altool 上传本地 IPA |
 
 严格提交检查还会要求本机存在并通过 `app-store/device-test-results.json`。
 
@@ -60,12 +61,12 @@ npm run appstore:verify-device-test
 | 项目 | 值 |
 | --- | --- |
 | App 名称 | 飞行记录 |
-| App Store Connect App 记录 | 待创建；2026-06-22 19:09 重新上传探测仍显示 `missingApp(bundleId: "com.xiazhiyuan.flightrecorder")`，按 `app-store/app-record-create-checklist.zh-CN.md` 创建 |
+| App Store Connect App 记录 | 已创建；Xcode 上传日志已识别 App ID `6782894756` 和 Bundle ID `com.xiazhiyuan.flightrecorder` |
 | Bundle ID | `com.xiazhiyuan.flightrecorder` |
 | SKU | `flight-recorder-ios` |
 | 平台 | iOS / iPad only |
 | 版本 | `1.0` |
-| 构建号 | `1` |
+| 构建号 | `2` |
 | 隐私 | 不追踪、不收集数据 |
 | 登录账号 | 不需要账号 |
 | 后端服务 | 不需要 |

@@ -52,7 +52,7 @@ for (const key of requiredStrings) {
 if (result.device !== "iPad Air 第五代") fail("device must be iPad Air 第五代");
 if (result.bundleId !== "com.xiazhiyuan.flightrecorder") fail("bundleId must be com.xiazhiyuan.flightrecorder");
 if (result.appVersion !== "1.0") fail("appVersion must be 1.0");
-if (String(result.buildNumber) !== "1") fail("buildNumber must be 1");
+if (String(result.buildNumber) !== "2") fail("buildNumber must be 2");
 if (!/^\d{4}-\d{2}-\d{2}$/.test(result.testDate)) fail("testDate must use YYYY-MM-DD");
 
 for (const key of requiredTrue) {

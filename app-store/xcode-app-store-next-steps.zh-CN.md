@@ -113,7 +113,7 @@ npm run ios:verify-archive:latest:signed
 
 ```sh
 npm run ios:archive:signed:tmp
-node scripts/verify_xcode_archive.mjs --require-signed /private/tmp/FlightRecorder-v1.0-b1.xcarchive
+node scripts/verify_xcode_archive.mjs --require-signed /private/tmp/FlightRecorder-v1.0-b2.xcarchive
 ```
 
 这个归档用于提前验证 Release 归档能生成、Bundle ID/版本/隐私清单/签名元数据正确。正式上传仍建议用 Xcode Organizer 的 Validate App 和 Distribute App 流程完成。

@@ -84,7 +84,7 @@ Flight records:
 - Records are owner-isolated when Cloudflare Access user headers exist.
 - FN archive is shared across users.
 - v54 adds an iPad App/local-only mode for Capacitor, file://, and `?local=1`: records and custom FN entries are stored locally, server fetch/upload is skipped, and pending upload state is cleared.
-- Capacitor 8.4.0 iOS project exists under `ios/App`; Bundle ID is `com.xiazhiyuan.flightrecorder`, version `1.0`, build `1`, iPad-only, minimum iPadOS 15.0.
+- Capacitor 8.4.0 iOS project exists under `ios/App`; Bundle ID is `com.xiazhiyuan.flightrecorder`, version `1.0`, build `2`, iPad-only, minimum iPadOS 15.0.
 - App privacy manifest `ios/App/App/PrivacyInfo.xcprivacy` declares no tracking and no collected data.
 - `ios/App/App/Info.plist` declares `ITSAppUsesNonExemptEncryption = false` for App Store export compliance.
 - Capacitor `CapacitorHttp` and `CapacitorCookies` bridge overrides are explicitly disabled in both root and iOS-bundled Capacitor config.
@@ -97,11 +97,12 @@ Flight records:
 - The app was installed and launched on the `iPad Pro 13-inch (M5)` simulator for App Store screenshot preparation; v55 screenshot saved at `app-store/ipad-13-inch-v55.png` with 2064x2752 pixels.
 - Screenshot demo data is stored in `app-store/demo-records.json`; import it through the app's backup import flow to create screenshots with fictional test data.
 - Xcode can complete a Release device build for the real iPad SDK with `CODE_SIGNING_ALLOWED=NO`; signing still needs the Apple Developer Team selected in Xcode before archive/upload.
-- Xcode can also create an unsigned archive at `build/Archives/FlightRecorder-v1.0-b1.xcarchive`; `npm run ios:verify-archive` confirms it has Bundle ID `com.xiazhiyuan.flightrecorder`, version `1.0`, build `1`, arm64, iPad-only, no collected data, and no native HTTP/Cookies bridge. This archive is only a local preflight artifact and cannot be uploaded without Apple Developer signing.
+- Xcode can also create an unsigned archive at `build/Archives/FlightRecorder-v1.0-b2.xcarchive`; `npm run ios:verify-archive` confirms it has Bundle ID `com.xiazhiyuan.flightrecorder`, version `1.0`, build `2`, arm64, iPad-only, no collected data, and no native HTTP/Cookies bridge. This archive is only a local preflight artifact and cannot be uploaded without Apple Developer signing.
 - Apple Developer Team `G6G6AGF8SA` is now written into the Xcode project. A signed Release build with `-allowProvisioningUpdates` reached provisioning, then failed because the team has no registered devices/profiles for `com.xiazhiyuan.flightrecorder`; connect and trust the iPad Air 5 so Xcode can register it.
 - On 2026-06-22, `xcrun xctrace list devices` saw the connected iPad `Xyan (26.3.1)` with UDID `00008103-000E41362629A01E`.
 - A signed Debug device build for that iPad succeeded with Apple Development identity `837026848@qq.com` and provisioning profile `iOS Team Provisioning Profile: com.xiazhiyuan.flightrecorder` when `-derivedDataPath /private/tmp/flight-recorder-derived` was used. Building under the project `Documents` path failed at codesign because the generated `.app` received File Provider/FinderInfo extended attributes.
-- A Release signed archive preflight also succeeded at `/private/tmp/FlightRecorder-v1.0-b1.xcarchive` using `npm run ios:archive:signed:tmp`; `node scripts/verify_xcode_archive.mjs --require-signed /private/tmp/FlightRecorder-v1.0-b1.xcarchive` confirmed Bundle ID `com.xiazhiyuan.flightrecorder`, version `1.0`, build `1`, and signing metadata. Treat this as a preflight artifact; final upload should still go through Xcode Organizer Validate/Distribute.
+- A Release signed archive preflight also succeeded at `/private/tmp/FlightRecorder-v1.0-b2.xcarchive` using `npm run ios:archive:signed:tmp`; `node scripts/verify_xcode_archive.mjs --require-signed /private/tmp/FlightRecorder-v1.0-b2.xcarchive` confirmed Bundle ID `com.xiazhiyuan.flightrecorder`, version `1.0`, build `2`, and signing metadata. Treat this as a preflight artifact; final upload should still go through Xcode Organizer Validate/Distribute.
+- App Store Connect App record exists; Xcode found App ID `6782894756`. Build `1.0 (2)` local App Store IPA export succeeded at `/private/tmp/FlightRecorder-export-b2/App.ipa`, but current upload attempts fail at Apple ContentDelivery object-storage with repeated `Checksums do not match` after a network loss. Retry from a different network path or use Apple Transporter/altool with App Store Connect credentials.
 
 UI and input:
 - Quick input buttons currently include RCD, HSO, HD, RP, DR, climb, descend, left/right turn, RWY, P/S, L/U, T/O, L/D, QNH.

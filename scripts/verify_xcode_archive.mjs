@@ -7,11 +7,11 @@ const EXPECTED = {
   bundleId: "com.xiazhiyuan.flightrecorder",
   displayName: "飞行记录",
   version: "1.0",
-  build: "1",
+  build: "2",
   minOs: "15.0",
 };
 
-const DEFAULT_ARCHIVE = "build/Archives/FlightRecorder-v1.0-b1.xcarchive";
+const DEFAULT_ARCHIVE = "build/Archives/FlightRecorder-v1.0-b2.xcarchive";
 
 const args = process.argv.slice(2);
 const requireSigned = args.includes("--require-signed");

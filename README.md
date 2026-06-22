@@ -90,7 +90,7 @@ npm run ios:build:device:signed
 
 ```sh
 npm run ios:archive:signed:tmp
-node scripts/verify_xcode_archive.mjs --require-signed /private/tmp/FlightRecorder-v1.0-b1.xcarchive
+node scripts/verify_xcode_archive.mjs --require-signed /private/tmp/FlightRecorder-v1.0-b2.xcarchive
 ```
 
 正式归档后可以检查 Xcode Organizer 中最新的已签名归档：

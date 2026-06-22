@@ -9,7 +9,7 @@ Final App Store Connect copy/paste and submission runbook: `app-store/app-store-
 - App name: 飞行记录
 - Bundle ID: `com.xiazhiyuan.flightrecorder`
 - Version: `1.0`
-- Build: `1`
+- Build: `2`
 - Platform: iPad only
 - Minimum iPadOS: 15.0
 - Web assets: `restored_webarchive`
@@ -21,9 +21,10 @@ Final App Store Connect copy/paste and submission runbook: `app-store/app-store-
 - App icon: `ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png`, 1024x1024 RGB with no alpha
 - Target physical device priority: iPad Air (5th generation), 10.9-inch class, verified with a same-size 1640x2360 iPad Air simulator screenshot at `app-store/ipad-air-5-size-v55.png`
 - Required 13-inch iPad App Store screenshot prepared at `app-store/ipad-13-inch-v55.png` with 2064x2752 pixels
-- Command-line signed archive preflight passed on 2026-06-22 at `/private/tmp/FlightRecorder-v1.0-b1.xcarchive`
-- App Store Connect local export preflight passed on 2026-06-22 at `/private/tmp/FlightRecorder-export/App.ipa`; IPA metadata and privacy manifest were inspected after export
-- Upload attempt on 2026-06-22 stopped before package upload because App Store Connect has no app record for `com.xiazhiyuan.flightrecorder` yet (Xcode log: `missingApp`). Create the App Store Connect app record first, then retry upload.
+- Command-line signed archive preflight passed on 2026-06-22 at `/private/tmp/FlightRecorder-v1.0-b2.xcarchive`
+- App Store Connect local export preflight passed on 2026-06-22 at `/private/tmp/FlightRecorder-export-b2/App.ipa`; IPA metadata and privacy manifest were inspected after export
+- App Store Connect app record exists; Xcode identified App ID `6782894756` for `com.xiazhiyuan.flightrecorder`.
+- Upload attempts for build `1.0 (2)` reached Apple ContentDelivery but the current network path repeatedly failed on object-storage checksum validation. Retry from a different network path or use Apple Transporter/altool with `/private/tmp/FlightRecorder-export-b2/App.ipa`.
 
 ## Local Build Commands
 
@@ -326,7 +327,7 @@ After on-device testing passes:
 1. In Xcode, select `Any iPadOS Device`.
 2. Confirm Team is selected and signing has no red errors.
 3. Product > Archive.
-4. In Organizer, select the newest archive for version `1.0` build `1`.
+4. In Organizer, select the newest archive for version `1.0` build `2`.
 5. Run the signed archive metadata check before uploading:
 
    ```sh
@@ -356,7 +357,7 @@ After on-device testing passes:
 13. Complete metadata, screenshots, age rating, privacy, pricing/availability, export compliance, and review notes.
 14. Submit for review.
 
-If you need to upload another build after a failed review or metadata change that requires a new binary, increment the build number from `1` to `2` in Xcode before archiving again.
+If you need to upload another build after a failed review or metadata change that requires a new binary, increment the build number to the next integer in Xcode before archiving again.
 
 ## Official References
 

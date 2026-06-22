@@ -5,13 +5,13 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const ARCHIVE_PATH = path.join(ROOT, "build/Archives/FlightRecorder-v1.0-b1.xcarchive");
-const TEMP_SIGNED_ARCHIVE_PATH = "/private/tmp/FlightRecorder-v1.0-b1.xcarchive";
-const TEMP_EXPORT_IPA_PATH = "/private/tmp/FlightRecorder-export/App.ipa";
+const ARCHIVE_PATH = path.join(ROOT, "build/Archives/FlightRecorder-v1.0-b2.xcarchive");
+const TEMP_SIGNED_ARCHIVE_PATH = "/private/tmp/FlightRecorder-v1.0-b2.xcarchive";
+const TEMP_EXPORT_IPA_PATH = "/private/tmp/FlightRecorder-export-b2/App.ipa";
 const DEVICE_TEST_RESULTS_PATH = path.join(ROOT, "app-store/device-test-results.json");
 const EXPECTED_BUNDLE_ID = "com.xiazhiyuan.flightrecorder";
 const EXPECTED_VERSION = "1.0";
-const EXPECTED_BUILD = "1";
+const EXPECTED_BUILD = "2";
 
 function read(file) {
   return fs.readFileSync(path.join(ROOT, file), "utf8");
@@ -71,16 +71,21 @@ function latestDistributionIssue() {
     .filter((dir) => {
       const verboseLog = path.join(dir, "IDEDistribution.verbose.log");
       const ascLog = path.join(dir, "IDEDistributionAppStoreConnect.log");
-      return fs.existsSync(verboseLog) || fs.existsSync(ascLog);
+      const contentLog = path.join(dir, "ContentDelivery.log");
+      return fs.existsSync(verboseLog) || fs.existsSync(ascLog) || fs.existsSync(contentLog);
     })
     .sort((a, b) => fs.statSync(b).mtimeMs - fs.statSync(a).mtimeMs);
 
   for (const dir of logs.slice(0, 5)) {
-    const textParts = ["IDEDistribution.verbose.log", "IDEDistributionAppStoreConnect.log"]
+    const textParts = ["ContentDelivery.log", "IDEDistribution.verbose.log", "IDEDistributionAppStoreConnect.log"]
       .map((name) => path.join(dir, name))
       .filter((file) => fs.existsSync(file))
       .map((file) => fs.readFileSync(file, "utf8"));
     const logText = textParts.join("\n");
+
+    if (/upload succeeded|upload complete|uploaded successfully/i.test(logText)) return null;
+    if (logText.includes("Checksums do not match")) return { kind: "upload-checksum", dir };
+    if (logText.includes("The network connection was lost")) return { kind: "upload-network", dir };
     if (logText.includes('missingApp(bundleId: "' + EXPECTED_BUNDLE_ID + '")')) {
       return { kind: "missing-app-record", dir };
     }
@@ -186,6 +191,10 @@ if (fs.existsSync(TEMP_EXPORT_IPA_PATH)) {
 const distributionIssue = latestDistributionIssue();
 if (distributionIssue?.kind === "missing-app-record") {
   statusLine("TODO", "App Store Connect app record", `create app record for ${EXPECTED_BUNDLE_ID}; latest upload log reports missingApp`);
+} else if (distributionIssue?.kind === "upload-checksum") {
+  statusLine("TODO", "App Store Connect upload", `latest upload log reports checksum mismatch: ${distributionIssue.dir}`);
+} else if (distributionIssue?.kind === "upload-network") {
+  statusLine("TODO", "App Store Connect upload", `latest upload log reports network loss: ${distributionIssue.dir}`);
 }
 
 const values = parseSubmissionValues();
@@ -218,5 +227,6 @@ if (!devices.ok || /No devices found/i.test(devices.stdout)) console.log("- Conf
 if (!fs.existsSync(DEVICE_TEST_RESULTS_PATH)) console.log("- After real iPad testing, copy app-store/device-test-results.example.json to app-store/device-test-results.json and mark passed checks true.");
 if (placeholders.length > 0) console.log("- Fill final support/privacy URL, email, price, regions, review contact, and device test statuses.");
 if (distributionIssue?.kind === "missing-app-record") console.log("- Create the App Store Connect app record for com.xiazhiyuan.flightrecorder, then retry upload.");
-else if (fs.existsSync(TEMP_EXPORT_IPA_PATH)) console.log("- Upload the verified App Store Connect export or use Xcode Organizer to upload/select build 1.0 (1).");
+else if (distributionIssue?.kind === "upload-checksum" || distributionIssue?.kind === "upload-network") console.log("- Retry uploading /private/tmp/FlightRecorder-export-b2/App.ipa from a different network path, or use Apple Transporter/altool with App Store Connect credentials.");
+else if (fs.existsSync(TEMP_EXPORT_IPA_PATH)) console.log("- Upload the verified App Store Connect export or use Xcode Organizer to upload/select build 1.0 (2).");
 console.log("- Run npm run check:appstore for local readiness, then npm run check:appstore:strict before final submission.");
