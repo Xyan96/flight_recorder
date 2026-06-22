@@ -21,6 +21,8 @@ Final App Store Connect copy/paste and submission runbook: `app-store/app-store-
 - App icon: `ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png`, 1024x1024 RGB with no alpha
 - Target physical device priority: iPad Air (5th generation), 10.9-inch class, verified with a same-size 1640x2360 iPad Air simulator screenshot at `app-store/ipad-air-5-size-v55.png`
 - Required 13-inch iPad App Store screenshot prepared at `app-store/ipad-13-inch-v55.png` with 2064x2752 pixels
+- Command-line signed archive preflight passed on 2026-06-22 at `/private/tmp/FlightRecorder-v1.0-b1.xcarchive`
+- App Store Connect local export preflight passed on 2026-06-22 at `/private/tmp/FlightRecorder-export/App.ipa`; IPA metadata and privacy manifest were inspected after export
 
 ## Local Build Commands
 

@@ -114,6 +114,17 @@ Use the English description from `app-store/metadata.en-US.md`.
 
 ## 6. 截图与构建
 
+### 本轮归档/导出预检结果
+
+2026-06-22 已完成命令行预检：
+
+- 临时签名归档成功：`/private/tmp/FlightRecorder-v1.0-b1.xcarchive`
+- 归档验证通过：Bundle ID `com.xiazhiyuan.flightrecorder`，Version `1.0`，Build `1`，Team `G6G6AGF8SA`
+- App Store Connect 本地导出成功：`/private/tmp/FlightRecorder-export/App.ipa`
+- IPA 内容检查通过：Bundle ID、Version、Build、iPad-only、`ITSAppUsesNonExemptEncryption = false`、PrivacyInfo 不收集数据
+
+正式提交时仍建议在 Xcode Organizer 中用最新 archive 上传，或者使用已验证的 App Store Connect 导出包按 Apple 流程上传。
+
 截图使用项目内已验证文件：
 
 | 截图集 | 文件 |

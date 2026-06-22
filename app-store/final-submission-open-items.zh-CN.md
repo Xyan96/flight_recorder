@@ -50,6 +50,8 @@ npm run appstore:verify-device-test
 | 记录夹载入 | 已通过，记录夹可载入刚保存的本地记录 | `app-store/device-test-checklist.zh-CN.md` |
 | 备份导出/导入 | 已通过，备份可导出并重新导入 | `app-store/device-test-checklist.zh-CN.md` |
 | 截图是否使用虚构测试数据 | 已通过，截图只使用虚构测试数据 | `app-store/screenshot-capture-guide.zh-CN.md` |
+| 命令行签名归档预检 | 已通过，`/private/tmp/FlightRecorder-v1.0-b1.xcarchive` | `node scripts/verify_xcode_archive.mjs --require-signed /private/tmp/FlightRecorder-v1.0-b1.xcarchive` |
+| App Store Connect 本地导出预检 | 已通过，`/private/tmp/FlightRecorder-export/App.ipa` | `xcodebuild -exportArchive`，并已检查 IPA 内 Bundle ID、版本、iPad-only、隐私清单 |
 
 严格提交检查还会要求本机存在并通过 `app-store/device-test-results.json`。
 
