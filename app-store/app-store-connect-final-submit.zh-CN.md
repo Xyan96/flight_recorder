@@ -32,13 +32,7 @@ npm run check:appstore:strict
 
 App Store Connect App 记录已经创建，Xcode 上传日志已识别到 App ID `6782894756` 和 Bundle ID `com.xiazhiyuan.flightrecorder`。
 
-当前 build `1.0 (2)` 的签名归档和本地 App Store IPA 导出均已通过；上传阶段已进入 Apple ContentDelivery，但当前网络路径在上传 `asset-description` 到 Apple object-storage 时反复返回：
-
-```text
-WILL RETRY PART 1. Checksums do not match.
-```
-
-日志中也出现过 `The network connection was lost.`。结论：App 记录、包体、签名和本地导出均不是当前阻塞点；剩余阻塞点是 App Store Connect 上传传输校验。可直接重试上传的本地 IPA 是 `/private/tmp/FlightRecorder-export-b2/App.ipa`。下一步建议换网络路径、关闭 VPN/流量过滤工具，或使用 Apple Transporter/altool 配合 App Store Connect 凭据上传。
+当前 build `1.0 (3)` 的签名归档已通过，且已显式声明现有 `AppIcon`。2026-06-22 21:53 CST，Xcode 上传成功，日志显示 `UPLOAD SUCCEEDED with no errors`，Delivery UUID 为 `cb751285-1d4b-438b-87ff-5c49572b3c71`。Apple 当前状态为 `PROCESSING`，下一步是在 App Store Connect 等待处理完成后选择这个 build。
 
 在 App Store Connect 创建或检查 App 记录：
 
@@ -130,12 +124,12 @@ Use the English description from `app-store/metadata.en-US.md`.
 
 2026-06-22 已完成命令行预检：
 
-- 临时签名归档成功：`/private/tmp/FlightRecorder-v1.0-b2.xcarchive`
-- 归档验证通过：Bundle ID `com.xiazhiyuan.flightrecorder`，Version `1.0`，Build `2`，Team `G6G6AGF8SA`
-- App Store Connect 本地导出成功：`/private/tmp/FlightRecorder-export-b2/App.ipa`
-- IPA 内容检查通过：Bundle ID、Version、Build、iPad-only、`ITSAppUsesNonExemptEncryption = false`、PrivacyInfo 不收集数据
+- 临时签名归档成功：`/private/tmp/FlightRecorder-v1.0-b3.xcarchive`
+- 归档验证通过：Bundle ID `com.xiazhiyuan.flightrecorder`，Version `1.0`，Build `3`，Team `G6G6AGF8SA`
+- App Store Connect 上传/导出成功：从 `/private/tmp/FlightRecorder-v1.0-b3.xcarchive` 直接上传，Apple 已接收包
+- Archive 内容检查通过：Bundle ID、Version、Build、iPad-only、`ITSAppUsesNonExemptEncryption = false`、PrivacyInfo 不收集数据
 
-正式提交时使用已验证的 build `1.0 (2)`。如果 Xcode Organizer 继续出现 checksum 重试，优先换网络路径或改用 Apple Transporter/altool 上传本地 IPA。
+正式提交时使用已验证且已上传的 build `1.0 (3)`。等待 Apple 处理完成后，在 App Store Connect 版本页面选择该 build。
 
 截图使用项目内已验证文件：
 
@@ -220,7 +214,7 @@ ITSAppUsesNonExemptEncryption = false
 
 ```sh
 xcodebuild -exportArchive \
-  -archivePath /private/tmp/FlightRecorder-v1.0-b2.xcarchive \
+  -archivePath /private/tmp/FlightRecorder-v1.0-b3.xcarchive \
   -exportPath /private/tmp/FlightRecorder-upload \
   -exportOptionsPlist /private/tmp/FlightRecorderUploadOptions.plist \
   -allowProvisioningUpdates
