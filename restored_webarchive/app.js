@@ -40,24 +40,39 @@ let stableAppViewportWidth = 0;
 function isKeyboardViewportResize() {
   const viewport = window.visualViewport;
   if (!viewport || !document.activeElement?.matches("input, textarea")) return false;
-  const layoutHeight = window.innerHeight || document.documentElement.clientHeight || viewport.height;
-  return viewport.height + viewport.offsetTop < layoutHeight - 80;
+  const layoutHeight =
+    stableAppViewportHeight || window.innerHeight || document.documentElement.clientHeight || viewport.height;
+  return viewport.height < layoutHeight - 80;
 }
 
 function updateAppViewportHeight({ reset = false } = {}) {
   const viewport = window.visualViewport;
-  const width = Math.max(viewport?.width || 0, window.innerWidth || 0, document.documentElement.clientWidth || 0);
-  const height = Math.max(viewport?.height || 0, window.innerHeight || 0, document.documentElement.clientHeight || 0);
+  const width = window.innerWidth || document.documentElement.clientWidth || viewport?.width || 0;
+  const height = window.innerHeight || document.documentElement.clientHeight || viewport?.height || 0;
   if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) return;
   if (reset || !stableAppViewportWidth || Math.abs(width - stableAppViewportWidth) > 80) {
     stableAppViewportWidth = width;
     stableAppViewportHeight = 0;
   }
   const roundedHeight = Math.round(height);
-  if (!stableAppViewportHeight || roundedHeight > stableAppViewportHeight || !isKeyboardViewportResize()) {
+  if (!stableAppViewportHeight || !isKeyboardViewportResize()) {
     stableAppViewportHeight = roundedHeight;
   }
   document.documentElement.style.setProperty("--app-height", `${stableAppViewportHeight}px`);
+}
+
+function preventViewportZoom() {
+  const preventGesture = (event) => event.preventDefault();
+  document.addEventListener("gesturestart", preventGesture, { passive: false });
+  document.addEventListener("gesturechange", preventGesture, { passive: false });
+  document.addEventListener("gestureend", preventGesture, { passive: false });
+  document.addEventListener(
+    "touchmove",
+    (event) => {
+      if (event.touches.length > 1) event.preventDefault();
+    },
+    { passive: false }
+  );
 }
 
 function scheduleAppViewportHeightUpdate(options = {}) {
@@ -69,6 +84,7 @@ function scheduleAppViewportHeightUpdate(options = {}) {
 }
 
 scheduleAppViewportHeightUpdate({ reset: true });
+preventViewportZoom();
 const LICENSE_ARCHIVE_RAW = `
 唐棣玺3743
 陈志明14489

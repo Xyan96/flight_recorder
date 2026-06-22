@@ -24,6 +24,14 @@
 - 如果 Xcode 提示注册设备或创建 provisioning profile，允许它自动处理。
 - 安装完成后，把 iPad 打开飞行模式，按 `app-store/device-test-checklist.zh-CN.md` 完整测试。
 
+也可以先跑一次命令行签名构建预检，确认账号、证书、provisioning 和 iPad SDK 都通：
+
+```sh
+npm run ios:build:device:signed
+```
+
+如果你要像本机测试一样直接指定已连接设备，使用 `xcrun xctrace list devices` 查到设备 ID 后，把命令里的 destination 改成 `id=<设备ID>`。本项目在 `Documents` 目录下时，签名构建应使用 `/private/tmp/flight-recorder-derived`，不要把 `DerivedData` 放在项目目录里。
+
 必须确认：
 
 - 断网可以启动。
@@ -100,6 +108,15 @@ npm run ios:verify-archive:latest:signed
 - 上传处理完成后，回 App Store Connect 选择这个 build。
 
 如果需要重新上传二进制，先把 Xcode 里的 Build 从 `1` 改成 `2`，再重新 Archive。
+
+命令行也可以做一次临时签名归档预检：
+
+```sh
+npm run ios:archive:signed:tmp
+node scripts/verify_xcode_archive.mjs --require-signed /private/tmp/FlightRecorder-v1.0-b1.xcarchive
+```
+
+这个归档用于提前验证 Release 归档能生成、Bundle ID/版本/隐私清单/签名元数据正确。正式上传仍建议用 Xcode Organizer 的 Validate App 和 Distribute App 流程完成。
 
 ## 7. 提交前本地检查
 

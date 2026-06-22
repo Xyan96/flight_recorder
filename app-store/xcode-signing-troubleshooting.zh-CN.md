@@ -42,6 +42,44 @@ npm run appstore:status
 - 如果提示注册设备，允许 Xcode 自动注册
 - 如果提示证书缺失，让 Xcode 自动创建 Apple Development 证书
 
+## resource fork / Finder information 报错
+
+如果命令行真机构建最后在 codesign 阶段失败：
+
+```text
+resource fork, Finder information, or similar detritus not allowed
+```
+
+本项目放在 `Documents` 目录下时，Xcode 的 build 产物可能被 macOS/File Provider 自动加上 `FinderInfo` 或类似扩展属性。不要把 `DerivedData` 放在项目目录下签名，改用 `/private/tmp`：
+
+```sh
+npm run ios:build:device:signed
+```
+
+等价的完整命令是：
+
+```sh
+xcodebuild -project ios/App/App.xcodeproj \
+  -scheme App \
+  -configuration Debug \
+  -destination "generic/platform=iOS" \
+  -derivedDataPath /private/tmp/flight-recorder-derived \
+  -allowProvisioningUpdates \
+  build
+```
+
+如果要指定当前已连接 iPad，可以把 destination 改成设备 ID，例如：
+
+```sh
+xcodebuild -project ios/App/App.xcodeproj \
+  -scheme App \
+  -configuration Debug \
+  -destination id=00008103-000E41362629A01E \
+  -derivedDataPath /private/tmp/flight-recorder-derived \
+  -allowProvisioningUpdates \
+  build
+```
+
 如果看到：
 
 ```text

@@ -1,9 +1,9 @@
-const CACHE_NAME = "flight-log-cache-v62";
+const CACHE_NAME = "flight-log-cache-v64";
 const ASSETS = [
   "./",
   "./index.html",
-  "./styles.css?v=62",
-  "./app.js?v=62",
+  "./styles.css?v=64",
+  "./app.js?v=64",
   "./manifest.json",
   "./icon.svg",
   "./icon-180.png",

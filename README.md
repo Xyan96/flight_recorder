@@ -12,6 +12,10 @@
 
 ## 当前版本
 
+v64：修复从联络记录第四行开始快捷输入不显示、界面被 iPad 键盘上移影响的问题；键盘判断不再受 `visualViewport.offsetTop` 干扰。
+
+v63：修复反复缩放窗口或手势缩放后界面放大且无法缩小的问题；窗口高度会随真实窗口尺寸回落，同时禁止整页 pinch zoom。
+
 v62：修复 iPad 收起键盘后快捷输入栏仍停留在底部、遮挡下方数据的问题；快捷输入现在随键盘收起自动隐藏。
 
 v61：修复 iPad 输入法弹起后主界面被压扁的问题；记录夹新增红色“删除”按钮，位于“载入”前并带二次确认。
@@ -62,6 +66,19 @@ npm run appstore:status
 
 ```sh
 npm run ios:verify-archive
+```
+
+真实 iPad 签名构建预检使用 `/private/tmp` 的 DerivedData，避免 `Documents` 目录扩展属性影响 codesign：
+
+```sh
+npm run ios:build:device:signed
+```
+
+临时签名归档预检：
+
+```sh
+npm run ios:archive:signed:tmp
+node scripts/verify_xcode_archive.mjs --require-signed /private/tmp/FlightRecorder-v1.0-b1.xcarchive
 ```
 
 正式归档后可以检查 Xcode Organizer 中最新的已签名归档：

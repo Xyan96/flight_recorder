@@ -110,7 +110,7 @@ expect_same_file restored_webarchive/manifest.json ios/App/App/public/manifest.j
 node -e 'for (const file of ["capacitor.config.json", "ios/App/App/capacitor.config.json", "package.json", "package-lock.json"]) { JSON.parse(require("fs").readFileSync(file, "utf8")); console.log(file + ": OK"); }'
 node -e 'JSON.parse(require("fs").readFileSync("app-store/submission-values.example.json", "utf8")); console.log("app-store/submission-values.example.json: OK");'
 node -e 'JSON.parse(require("fs").readFileSync("app-store/device-test-results.example.json", "utf8")); console.log("app-store/device-test-results.example.json: OK");'
-node -e 'const pkg = JSON.parse(require("fs").readFileSync("package.json", "utf8")); for (const key of ["check:local-only", "check:appstore", "check:appstore:strict", "appstore:status", "appstore:verify-device-test", "appstore:apply-values", "appstore:self-test-values", "ios:verify-archive", "ios:verify-archive:signed", "ios:verify-archive:latest", "ios:verify-archive:latest:signed", "ios:open"]) { if (!pkg.scripts?.[key]) throw new Error("missing npm script " + key); } console.log("npm App Store scripts: OK");'
+node -e 'const pkg = JSON.parse(require("fs").readFileSync("package.json", "utf8")); for (const key of ["check:local-only", "check:appstore", "check:appstore:strict", "appstore:status", "appstore:verify-device-test", "appstore:apply-values", "appstore:self-test-values", "ios:build:device:signed", "ios:archive:signed:tmp", "ios:verify-archive", "ios:verify-archive:signed", "ios:verify-archive:latest", "ios:verify-archive:latest:signed", "ios:open"]) { if (!pkg.scripts?.[key]) throw new Error("missing npm script " + key); } console.log("npm App Store scripts: OK");'
 node -e 'for (const file of ["capacitor.config.json", "ios/App/App/capacitor.config.json"]) { const cfg = JSON.parse(require("fs").readFileSync(file, "utf8")); if (cfg.plugins?.CapacitorHttp?.enabled !== false) throw new Error(file + ": CapacitorHttp must be disabled"); if (cfg.plugins?.CapacitorCookies?.enabled !== false) throw new Error(file + ": CapacitorCookies must be disabled"); console.log(file + ": native HTTP/Cookies bridge disabled"); }'
 node -e 'for (const file of ["capacitor.config.json", "ios/App/App/capacitor.config.json"]) { const cfg = JSON.parse(require("fs").readFileSync(file, "utf8")); if (cfg.server) throw new Error(file + ": server config must not be set for offline iPad app"); } console.log("Capacitor server config absent: OK");'
 node scripts/verify_local_only_guards.mjs restored_webarchive/app.js ios/App/App/public/app.js
@@ -122,15 +122,19 @@ expect_contains ios/App/App/capacitor.config.json '"appId": "com.xiazhiyuan.flig
 expect_contains capacitor.config.json '"CapacitorHttp"' "CapacitorHttp config"
 expect_contains capacitor.config.json '"CapacitorCookies"' "CapacitorCookies config"
 expect_contains capacitor.config.json '"appName": "飞行记录"' "Capacitor appName"
-expect_contains restored_webarchive/index.html 'styles.css?v=62' "Web CSS version"
-expect_contains restored_webarchive/index.html 'app.js?v=62' "Web JS version"
-expect_contains ios/App/App/public/index.html 'styles.css?v=62' "iOS CSS version"
-expect_contains ios/App/App/public/index.html 'app.js?v=62' "iOS JS version"
-expect_contains restored_webarchive/sw.js 'flight-log-cache-v62' "Web service worker cache version"
-expect_contains ios/App/App/public/sw.js 'flight-log-cache-v62' "iOS service worker cache version"
+expect_contains restored_webarchive/index.html 'styles.css?v=64' "Web CSS version"
+expect_contains restored_webarchive/index.html 'app.js?v=64' "Web JS version"
+expect_contains ios/App/App/public/index.html 'styles.css?v=64' "iOS CSS version"
+expect_contains ios/App/App/public/index.html 'app.js?v=64' "iOS JS version"
+expect_contains restored_webarchive/sw.js 'flight-log-cache-v64' "Web service worker cache version"
+expect_contains ios/App/App/public/sw.js 'flight-log-cache-v64' "iOS service worker cache version"
+expect_contains restored_webarchive/index.html 'maximum-scale=1' "Viewport maximum scale lock"
+expect_contains restored_webarchive/index.html 'user-scalable=no' "Viewport user scale lock"
 expect_contains restored_webarchive/app.js 'const CHECK_ROWS = 4;' "Four cruise check records"
 expect_contains ios/App/App/public/app.js 'const CHECK_ROWS = 4;' "iOS four cruise check records"
 expect_contains restored_webarchive/app.js 'isKeyboardViewportResize' "Keyboard viewport guard"
+expect_contains restored_webarchive/app.js 'viewport.height < layoutHeight - 80' "Keyboard height-only guard"
+expect_contains restored_webarchive/app.js 'preventViewportZoom' "Viewport zoom guard"
 expect_contains restored_webarchive/app.js 'syncQuickPhraseDockWithKeyboard' "Quick phrase keyboard sync"
 expect_contains restored_webarchive/app.js 'data-delete-record' "Record folder delete action"
 expect_contains restored_webarchive/app.js 'SMOKE_TEST_MODE' "Smoke test mode"

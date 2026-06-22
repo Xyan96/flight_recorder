@@ -6,10 +6,10 @@ Project purpose: offline iPad flight communication/cruise-check recorder prepare
 
 ## Current Version
 
-Current app version: v62.
+Current app version: v64.
 
 Current local preview URLs:
-- Local: http://127.0.0.1:8765/?v=62
+- Local: http://127.0.0.1:8765/?v=64
 - Local-only preview: http://127.0.0.1:8765/?local=1
 
 Public-domain deployment is retired from the iPad App runtime plan. The iPad App is local-only. App Store support/privacy pages may use GitHub Pages or the user's domain, but only as public static pages and not as an app backend/runtime dependency.
@@ -97,6 +97,9 @@ Flight records:
 - Xcode can complete a Release device build for the real iPad SDK with `CODE_SIGNING_ALLOWED=NO`; signing still needs the Apple Developer Team selected in Xcode before archive/upload.
 - Xcode can also create an unsigned archive at `build/Archives/FlightRecorder-v1.0-b1.xcarchive`; `npm run ios:verify-archive` confirms it has Bundle ID `com.xiazhiyuan.flightrecorder`, version `1.0`, build `1`, arm64, iPad-only, no collected data, and no native HTTP/Cookies bridge. This archive is only a local preflight artifact and cannot be uploaded without Apple Developer signing.
 - Apple Developer Team `G6G6AGF8SA` is now written into the Xcode project. A signed Release build with `-allowProvisioningUpdates` reached provisioning, then failed because the team has no registered devices/profiles for `com.xiazhiyuan.flightrecorder`; connect and trust the iPad Air 5 so Xcode can register it.
+- On 2026-06-22, `xcrun xctrace list devices` saw the connected iPad `Xyan (26.3.1)` with UDID `00008103-000E41362629A01E`.
+- A signed Debug device build for that iPad succeeded with Apple Development identity `837026848@qq.com` and provisioning profile `iOS Team Provisioning Profile: com.xiazhiyuan.flightrecorder` when `-derivedDataPath /private/tmp/flight-recorder-derived` was used. Building under the project `Documents` path failed at codesign because the generated `.app` received File Provider/FinderInfo extended attributes.
+- A Release signed archive preflight also succeeded at `/private/tmp/FlightRecorder-v1.0-b1.xcarchive` using `npm run ios:archive:signed:tmp`; `node scripts/verify_xcode_archive.mjs --require-signed /private/tmp/FlightRecorder-v1.0-b1.xcarchive` confirmed Bundle ID `com.xiazhiyuan.flightrecorder`, version `1.0`, build `1`, and signing metadata. Treat this as a preflight artifact; final upload should still go through Xcode Organizer Validate/Distribute.
 
 UI and input:
 - Quick input buttons currently include RCD, HSO, HD, RP, DR, climb, descend, left/right turn, RWY, P/S, L/U, T/O, L/D, QNH.
@@ -116,6 +119,8 @@ UI and input:
 - v60 changes cruise-check records from 3 to 4, keeps the right-side check column scrollable, and removes the oversized fixed card height so landscape rows do not leave large blank areas under each record.
 - v61 keeps the app shell at a stable full-screen height when the iPad keyboard opens, while the quick phrase dock still follows VisualViewport above the keyboard. Record folder rows now have a red Delete button before Load with a confirmation dialog; local deletion also clears matching pending records.
 - v62 hides the quick phrase dock automatically when the iPad software keyboard is dismissed, while retaining enough active note state for the dock to reappear when the keyboard opens again.
+- v63 lets the app shell height shrink again when the actual iPad window is resized, while still freezing height during software-keyboard viewport changes. It also locks the page viewport scale and prevents pinch gestures so repeated window or gesture scaling cannot leave the interface zoomed in.
+- v64 fixes lower communication rows, especially row 4 and below, failing to show the quick phrase dock after iPad pans the visual viewport upward. Keyboard detection now compares visual viewport height against the stable app height and ignores `visualViewport.offsetTop`.
 - Native keyboard behavior was restored after forced uppercase/digital keyboard bugs.
 - Record folder layout was adjusted multiple times: narrower dialog, separated controls, search beside flight number under Close row.
 - Top bar was adjusted: captain name input is about five Chinese characters wide, FN keeps more width, top row columns are more balanced.
