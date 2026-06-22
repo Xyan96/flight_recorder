@@ -15,9 +15,9 @@ Current local preview URLs:
 Public-domain deployment is retired from the iPad App runtime plan. The iPad App is local-only. App Store support/privacy pages may use GitHub Pages or the user's domain, but only as public static pages and not as an app backend/runtime dependency.
 
 Main project path:
-- /Users/xiazhiyuan/Documents/Codex/fljght_recorder
+- /Users/xiazhiyuan/Documents/Codex/Flight
 
-Note: the current local folder still uses the original misspelled path. Public identifiers and App Store metadata should use `flight`, not `fljght`. Rename the local folder only from outside this active workspace.
+Note: public identifiers and App Store metadata use `flight`, not the original misspelled `fljght`.
 
 Main files:
 - restored_webarchive/index.html
@@ -148,7 +148,7 @@ Historical issue:
 ## Git State
 
 Local Git repository is initialized at:
-- /Users/xiazhiyuan/Documents/Codex/fljght_recorder
+- /Users/xiazhiyuan/Documents/Codex/Flight
 
 Current branch:
 - main
@@ -169,7 +169,7 @@ GitHub:
 When ready to create and push to GitHub:
 
 ```sh
-cd /Users/xiazhiyuan/Documents/Codex/fljght_recorder
+cd /Users/xiazhiyuan/Documents/Codex/Flight
 gh auth login
 gh repo create Xyan96/flight_recorder --private --source=. --remote=origin --push
 git tag v53
@@ -180,7 +180,7 @@ git push origin v53
 If the empty GitHub repo is created manually first:
 
 ```sh
-cd /Users/xiazhiyuan/Documents/Codex/fljght_recorder
+cd /Users/xiazhiyuan/Documents/Codex/Flight
 git remote add origin https://github.com/Xyan96/flight_recorder.git
 git push -u origin main
 git tag v53
@@ -195,7 +195,7 @@ Release checklist:
 
 ## Notes For Future Recovery
 
-- Do not trust the old project path `/Users/xiazhiyuan/Documents/Codex/2026-05-17/files-mentioned-by-the-user-backup` as the active project. The active project is `flight_recorder`; the current folder may still have the legacy spelling until it is renamed outside this active workspace.
-- `deployment/publish.sh` was fixed to publish from `/Users/xiazhiyuan/Documents/Codex/fljght_recorder/restored_webarchive/`.
+- Do not trust the old project path `/Users/xiazhiyuan/Documents/Codex/2026-05-17/files-mentioned-by-the-user-backup` as the active project. The active project is `/Users/xiazhiyuan/Documents/Codex/Flight`.
+- `deployment/publish.sh` was fixed to publish from `/Users/xiazhiyuan/Documents/Codex/Flight/restored_webarchive/`.
 - Do not delete or overwrite `/Users/xiazhiyuan/.flight-log-data/records` unless explicitly asked.
 - Avoid long-running broad filesystem searches; the user prefers short checks and regular status updates.
