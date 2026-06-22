@@ -1,5 +1,6 @@
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -54,6 +55,37 @@ function parseSubmissionValues() {
   } catch (error) {
     return { exists: true, error: error.message };
   }
+}
+
+function latestDistributionIssue() {
+  let entries = [];
+  try {
+    entries = fs.readdirSync(os.tmpdir(), { withFileTypes: true });
+  } catch {
+    return null;
+  }
+
+  const logs = entries
+    .filter((entry) => entry.isDirectory() && entry.name.endsWith(".xcdistributionlogs"))
+    .map((entry) => path.join(os.tmpdir(), entry.name))
+    .filter((dir) => {
+      const verboseLog = path.join(dir, "IDEDistribution.verbose.log");
+      const ascLog = path.join(dir, "IDEDistributionAppStoreConnect.log");
+      return fs.existsSync(verboseLog) || fs.existsSync(ascLog);
+    })
+    .sort((a, b) => fs.statSync(b).mtimeMs - fs.statSync(a).mtimeMs);
+
+  for (const dir of logs.slice(0, 5)) {
+    const textParts = ["IDEDistribution.verbose.log", "IDEDistributionAppStoreConnect.log"]
+      .map((name) => path.join(dir, name))
+      .filter((file) => fs.existsSync(file))
+      .map((file) => fs.readFileSync(file, "utf8"));
+    const logText = textParts.join("\n");
+    if (logText.includes('missingApp(bundleId: "' + EXPECTED_BUNDLE_ID + '")')) {
+      return { kind: "missing-app-record", dir };
+    }
+  }
+  return null;
 }
 
 function placeholderHits() {
@@ -151,6 +183,11 @@ if (fs.existsSync(TEMP_EXPORT_IPA_PATH)) {
   statusLine("TODO", "App Store Connect export preflight", "export or upload the signed archive with Xcode Organizer");
 }
 
+const distributionIssue = latestDistributionIssue();
+if (distributionIssue?.kind === "missing-app-record") {
+  statusLine("TODO", "App Store Connect app record", `create app record for ${EXPECTED_BUNDLE_ID}; latest upload log reports missingApp`);
+}
+
 const values = parseSubmissionValues();
 if (!values.exists) {
   statusLine("TODO", "Final submission values", "copy app-store/submission-values.example.json to app-store/submission-values.json");
@@ -180,5 +217,6 @@ if (teams.length === 0) console.log("- Select your Apple Developer Team in Xcode
 if (!devices.ok || /No devices found/i.test(devices.stdout)) console.log("- Confirm the iPad Air 5 is connected, unlocked, trusted, and visible in Xcode's device picker.");
 if (!fs.existsSync(DEVICE_TEST_RESULTS_PATH)) console.log("- After real iPad testing, copy app-store/device-test-results.example.json to app-store/device-test-results.json and mark passed checks true.");
 if (placeholders.length > 0) console.log("- Fill final support/privacy URL, email, price, regions, review contact, and device test statuses.");
-if (fs.existsSync(TEMP_EXPORT_IPA_PATH)) console.log("- Upload the verified App Store Connect export or use Xcode Organizer to upload/select build 1.0 (1).");
+if (distributionIssue?.kind === "missing-app-record") console.log("- Create the App Store Connect app record for com.xiazhiyuan.flightrecorder, then retry upload.");
+else if (fs.existsSync(TEMP_EXPORT_IPA_PATH)) console.log("- Upload the verified App Store Connect export or use Xcode Organizer to upload/select build 1.0 (1).");
 console.log("- Run npm run check:appstore for local readiness, then npm run check:appstore:strict before final submission.");

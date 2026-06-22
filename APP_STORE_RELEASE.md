@@ -23,6 +23,7 @@ Final App Store Connect copy/paste and submission runbook: `app-store/app-store-
 - Required 13-inch iPad App Store screenshot prepared at `app-store/ipad-13-inch-v55.png` with 2064x2752 pixels
 - Command-line signed archive preflight passed on 2026-06-22 at `/private/tmp/FlightRecorder-v1.0-b1.xcarchive`
 - App Store Connect local export preflight passed on 2026-06-22 at `/private/tmp/FlightRecorder-export/App.ipa`; IPA metadata and privacy manifest were inspected after export
+- Upload attempt on 2026-06-22 stopped before package upload because App Store Connect has no app record for `com.xiazhiyuan.flightrecorder` yet (Xcode log: `missingApp`). Create the App Store Connect app record first, then retry upload.
 
 ## Local Build Commands
 

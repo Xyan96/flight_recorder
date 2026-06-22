@@ -28,6 +28,16 @@ npm run check:appstore:strict
 
 ## 1. App 信息
 
+### 2026-06-22 上传尝试结果
+
+已尝试使用 Xcode 命令行上传已验证归档，上传在下载 App Store Connect App 信息时停止。日志确认 Apple 查询 `com.xiazhiyuan.flightrecorder` 返回 0 个 App 记录，并报：
+
+```text
+IDEDistribution.DistributionAppRecordProviderError.missingApp(bundleId: "com.xiazhiyuan.flightrecorder")
+```
+
+结论：构建包、签名和导出预检均已通过；下一步必须先在 App Store Connect 创建这个 Bundle ID 对应的 App 记录，然后再上传 build。
+
 在 App Store Connect 创建或检查 App 记录：
 
 | 字段 | 填写 |
@@ -199,6 +209,20 @@ ITSAppUsesNonExemptEncryption = false
 | Designed for encrypted communication or security | No / 否 |
 
 ## 9. 提交审核
+
+### 如果上传前提示 missingApp
+
+如果 Xcode 上传显示 `Error Downloading App Information`，并且日志里出现 `missingApp(bundleId: "com.xiazhiyuan.flightrecorder")`，说明 App Store Connect 里还没有 App 记录。先完成本文件第 1 节的 App 信息创建，然后重新执行上传。
+
+重新上传可使用 Xcode Organizer，也可以使用已经验证过的命令行路径：
+
+```sh
+xcodebuild -exportArchive \
+  -archivePath /private/tmp/FlightRecorder-v1.0-b1.xcarchive \
+  -exportPath /private/tmp/FlightRecorder-upload \
+  -exportOptionsPlist /private/tmp/FlightRecorderUploadOptions.plist \
+  -allowProvisioningUpdates
+```
 
 确认以上项目后：
 
