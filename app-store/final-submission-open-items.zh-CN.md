@@ -66,7 +66,7 @@ npm run appstore:verify-device-test
 | SKU | `flight-recorder-ios` |
 | 平台 | iOS / iPad only |
 | 版本 | `1.0` |
-| 构建号 | `2` |
+| 构建号 | `3` |
 | 隐私 | 不追踪、不收集数据 |
 | 登录账号 | 不需要账号 |
 | 后端服务 | 不需要 |
