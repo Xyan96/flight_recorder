@@ -17,7 +17,7 @@ Public-domain deployment is retired from the iPad App runtime plan. The iPad App
 Main project path:
 - /Users/xiazhiyuan/Documents/Codex/Flight
 
-Note: public identifiers and App Store metadata use `flight`, not the original misspelled `fljght`.
+Note: public identifiers and App Store metadata use `flight`, not the original typo.
 
 Main files:
 - restored_webarchive/index.html
@@ -160,31 +160,23 @@ Tag:
 - `v53`
 
 GitHub:
-- GitHub user seen through connector: Xyan96
-- Preferred corrected repository name: `Xyan96/flight_recorder`.
-- Current origin may still point at the legacy misspelled repository URL until the GitHub repository is renamed.
-- GitHub CLI `gh` was installed, but not logged in.
-- User said they cannot log into browser now and will add GitHub later.
+- GitHub user: Xyan96
+- Repository: `Xyan96/flight_recorder`
+- Local origin: `https://github.com/Xyan96/flight_recorder.git`
+- GitHub CLI `gh` is logged in as Xyan96.
 
-When ready to create and push to GitHub:
+When ready to push to GitHub:
 
 ```sh
 cd /Users/xiazhiyuan/Documents/Codex/Flight
-gh auth login
-gh repo create Xyan96/flight_recorder --private --source=. --remote=origin --push
-git tag v53
 git push origin main
 git push origin v53
 ```
 
-If the empty GitHub repo is created manually first:
+If the local origin is ever lost, restore it with:
 
 ```sh
-cd /Users/xiazhiyuan/Documents/Codex/Flight
 git remote add origin https://github.com/Xyan96/flight_recorder.git
-git push -u origin main
-git tag v53
-git push origin v53
 ```
 
 Release checklist:
