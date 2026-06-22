@@ -60,7 +60,7 @@ npm run appstore:verify-device-test
 | 项目 | 值 |
 | --- | --- |
 | App 名称 | 飞行记录 |
-| App Store Connect App 记录 | 待创建；2026-06-22 上传尝试日志显示 `missingApp(bundleId: "com.xiazhiyuan.flightrecorder")` |
+| App Store Connect App 记录 | 待创建；2026-06-22 19:09 重新上传探测仍显示 `missingApp(bundleId: "com.xiazhiyuan.flightrecorder")`，按 `app-store/app-record-create-checklist.zh-CN.md` 创建 |
 | Bundle ID | `com.xiazhiyuan.flightrecorder` |
 | SKU | `flight-recorder-ios` |
 | 平台 | iOS / iPad only |

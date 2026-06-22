@@ -68,6 +68,12 @@ npm run appstore:status
 app-store/app-store-connect-final-submit.zh-CN.md
 ```
 
+如果上传前出现 `missingApp(bundleId: "com.xiazhiyuan.flightrecorder")`，先按这份清单创建 App Store Connect App 记录：
+
+```text
+app-store/app-record-create-checklist.zh-CN.md
+```
+
 已有 `.xcarchive` 后可以检查归档元数据：
 
 ```sh

@@ -36,7 +36,7 @@ npm run check:appstore:strict
 IDEDistribution.DistributionAppRecordProviderError.missingApp(bundleId: "com.xiazhiyuan.flightrecorder")
 ```
 
-结论：构建包、签名和导出预检均已通过；下一步必须先在 App Store Connect 创建这个 Bundle ID 对应的 App 记录，然后再上传 build。
+结论：构建包、签名和导出预检均已通过；下一步必须先在 App Store Connect 创建这个 Bundle ID 对应的 App 记录，然后再上传 build。创建弹窗的最小填写清单见 `app-store/app-record-create-checklist.zh-CN.md`。
 
 在 App Store Connect 创建或检查 App 记录：
 
